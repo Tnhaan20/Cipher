@@ -1,30 +1,46 @@
-# React + TypeScript + Vite
+# Cipher
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**For learning and experimentation only. Not for production use.**
 
-Currently, two official plugins are available:
+## Description
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Cipher is a web application built with Vite, React, and Tailwind CSS. It provides a modern and efficient development environment for creating dynamic user interfaces.
 
-## Expanding the ESLint configuration
+## Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+Before you begin, ensure you have the following installed on your local machine:
 
-- Configure the top-level `parserOptions` property like this:
+- [Node.js](https://nodejs.org/) (v14.0.0 or later)
+- [npm](https://www.npmjs.com/) (usually comes with Node.js)
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json', './tsconfig.app.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## Installation
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Tnhaan20/Cipher.git
+   cd Cipher
+   ```
+
+2. Install the dependencies:
+   ```bash
+   npm install
+   ```
+
+## Usage
+
+After installation, you can run the application locally:
+
+1. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+2. Open your browser and navigate to `http://localhost:5173` (or the port shown in your terminal).
+
+3. You should now see the Cipher application running in your browser.
+
+## Features
+
+- Fast development with Vite
+- Modern UI components with React
+- Responsive design using Tailwind CSS
