@@ -1,0 +1,43 @@
+
+.user-nav {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.user-nav a {
+  position: relative;
+  font-size: 20px;
+  color: #808080;
+  font-weight: 500;
+  margin-left: 20px;
+  transition: color 0.3s;
+  padding-bottom: 5px; /* Add some padding to create space for the underline */
+}
+
+.user-nav a::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #006239;
+  transition: width 0.3s ease;
+}
+
+.user-nav a:hover::before,
+.user-nav a:focus::before {
+  width: 100%;
+}
+
+.user-nav a.active-nav::before {
+  width: 100%;
+}
+
+.user-nav a:hover,
+.user-nav a:focus,
+.user-nav a.active-nav {
+  color: #3ecf8e;
+}
