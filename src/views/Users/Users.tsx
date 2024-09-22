@@ -1,6 +1,7 @@
 import axios from 'axios';
-import React, { Component, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import UserCard from '../../components/UserCard/UserCard';
+import FuncButton from '../../components/Button/FuncButton';
 
 export default function User() {
   interface Geo {
@@ -33,100 +34,94 @@ export default function User() {
     company: Company;
   }
 
-  const [users, setUsers] = useState<User[] | null>(null);
+  const [users, setUsers] = useState<User[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
   const [searchInput, setSearchInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const loadUser = async() => {
-    try {
-      await axios.get(`https://jsonplaceholder.typicode.com/users`)
-      .then((response) => {
-        setUsers(response.data)        
-      })
-    } catch (error) {
-      console.log('Error: ' + error);
-    }
-  }
-
-  const searchUser = async() => {
-    if (!searchInput.trim()) {
-      loadUser();
-      return;
-    }
-
+  const loadUsers = async() => {
     try {
       setLoading(true);
-      const id = parseInt(searchInput);
-      if (isNaN(id)) {
-        setError("Please enter a valid User ID (number).");
-        return;
-      }
-      const response = await axios.get<User>(
-        `https://jsonplaceholder.typicode.com/users/${id}`
-      );
-      setUsers([response.data]);
+      const response = await axios.get<User[]>(`https://jsonplaceholder.typicode.com/users`);
+      setUsers(response.data);
+      setAllUsers(response.data);
       setError(null);
     } catch (error) {
-      console.error("Error fetching User:", error);
-      setError("User not found. Please try a different ID.");
-      setUsers([]);
+      console.log('Error: ' + error);
+      setError("Failed to load users. Please try again later.");
     } finally {
       setLoading(false);
     }
+  }
+
+  const searchUser = () => {
+    if (!searchInput.trim()) {
+      setUsers(allUsers);
+      setError(null);
+      return;
+    }
+
+    const filteredUsers = allUsers.filter(user =>
+      user.name.toLowerCase().includes(searchInput.toLowerCase())
+    );
+
+    if (filteredUsers.length === 0) {
+      setError("No users found matching the search criteria.");
+    } else {
+      setError(null);
+    }
+
+    setUsers(filteredUsers);
   };
   
+  useEffect(() => {
+    loadUsers();
+  }, []);
 
-  useEffect(() =>{
-    loadUser()
-  },[])
+  useEffect(() => {
+    searchUser();
+  }, [searchInput]);
 
-    return (
-      <div className="w-full pt-28">
-        <div className="grid grid-cols-2">
-          <div>
-            <h1 className="text-3xl pt-3 text-[#2c9063] font-bold">USERS</h1>
-          </div>
+  return (
+    <div className="w-full pt-28">
+      <div className="grid grid-cols-2">
+        <div className="mr-72">
+          <FuncButton
+            name="Create user"
+          />
+        </div>
         <div className="flex justify-end">
           <input
             type="text"
             className="search-input p-2 h-11 mt-2 mr-2 w-80"
-            placeholder="Search Users by id"
+            placeholder="Search Users by name"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
-          <button
-            onClick={searchUser}
-            className="button-search"
-          >
-            Search
-          </button>
         </div>
       </div>
 
       {error && <p className="text-red-500 text-center my-4">{error}</p>}
 
-        <div className="grid grid-cols-2 mx-5 pr-5 gap-1">
-          {users ? 
-            users.map((user)=>(
-              <div key={user.id} className="p-1">
-                <UserCard
-                  id={user.id}
-                  name={user.name}
-                  phone={user.phone}
-                  email={user.email}
-                />
+      <div className="grid grid-cols-2 mx-5 pr-5 gap-1">
+        {loading ? (
+          <p className="col-span-full text-center">Loading users...</p>
+        ) : users.length > 0 ? (
+          users.map((user) => (
+            <div key={user.id} className="p-1">
+              <UserCard
+                id={user.id}
+                name={user.name}
+                phone={user.phone}
+                email={user.email}
+              />
             </div>
-            ))
-          :
-          (loading ? (
-            <p className="col-span-full text-center">Loading user...</p>
-          ) : (
-            <p className="col-span-full text-center">No user found.</p>
           ))
-          }
-        
+        ) : (
+          <p className="col-span-full text-center">No users found.</p>
+        )}
       </div>
-      </div>
-    )
+    </div>
+  )
 }

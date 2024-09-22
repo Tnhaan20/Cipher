@@ -148,7 +148,7 @@ export default function UserPost() {
             // Load user information when rendering each post
             loadUser(post.userId);
             return (
-              <div key={post.id} className="w-[60%] bg-[#171717] rounded-lg overflow-hidden mb-4">
+              <div key={post.id} className="w-[50%] bg-[#171717] rounded-lg overflow-hidden mb-4">
                 <PostCard
                   userId={post.userId}
                   id={post.id}

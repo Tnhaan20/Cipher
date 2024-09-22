@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import AlbumCard from "../../components/AlbumCard/AlbumCard";
+import FuncButton from "../../components/Button/FuncButton";
 
 interface Album {
   userId: number;
@@ -8,9 +9,9 @@ interface Album {
   title: string;
 }
 
-
 export default function Album() {
   const [albums, setAlbums] = useState<Album[]>([]);
+  const [allAlbums, setAllAlbums] = useState<Album[]>([]);
   const [searchInput, setSearchInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,6 +27,7 @@ export default function Album() {
         "https://jsonplaceholder.typicode.com/albums"
       );
       setAlbums(response.data);
+      setAllAlbums(response.data);
       setError(null);
     } catch (error) {
       console.error("Error loading albums:", error);
@@ -35,55 +37,47 @@ export default function Album() {
     }
   };
 
-  const searchAlbum = async () => {
+  const searchAlbum = () => {
     if (!searchInput.trim()) {
-      loadAlbums();
+      setAlbums(allAlbums);
+      setError(null);
       return;
     }
 
-    try {
-      setLoading(true);
-      const id = parseInt(searchInput);
-      if (!/^\d+$/.test(searchInput)) {
-        setError("Please enter a valid post ID (positive integer only).");
-        setAlbums([]);
-        setLoading(false);
-        return;
-      }
-      const response = await axios.get<Album>(
-        `https://jsonplaceholder.typicode.com/albums/${id}`
-      );
-      setAlbums([response.data]);
+    const filteredAlbums = allAlbums.filter(album =>
+      album.title.toLowerCase().includes(searchInput.toLowerCase())
+    );
+
+    if (filteredAlbums.length === 0) {
+      setError("No albums found matching the search criteria.");
+    } else {
       setError(null);
-    } catch (error) {
-      console.error("Error fetching album:", error);
-      setError("Album not found. Please try a different ID.");
-      setAlbums([]);
-    } finally {
-      setLoading(false);
     }
+
+    setAlbums(filteredAlbums);
   };
+
+  useEffect(() => {
+    searchAlbum();
+  }, [searchInput]);
 
   return (
     <div className="w-full text-white pt-28 px-4 min-h-screen">
       <div className="grid grid-cols-2 p-5">
-        <div>
-          <h1 className="text-2xl pl-40 pt-3 text-[#2c9063] font-bold">ALBUMS</h1>
+        <div className="mr-72">
+          <FuncButton
+            name="Create album"
+          />
         </div>
         <div className="flex justify-end">
           <input
             type="text"
             className="search-input p-2 h-11 mt-2 mr-2 w-96"
-            placeholder="Search albums by id"
+            placeholder="Search albums by title"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
-          <button
-            onClick={searchAlbum}
-            className="button-search"
-          >
-            Search
-          </button>
+          
         </div>
       </div>
 

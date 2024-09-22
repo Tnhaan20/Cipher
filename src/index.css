@@ -46,6 +46,16 @@
   font-style: normal;
 }
 
+.created-input{
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 4px;
+  border:1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  width: 150%;
+}
+
 .search-input{
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
   backdrop-filter: blur(10px);
@@ -62,7 +72,8 @@
   box-sizing: border-box;
   color: #fff;
   cursor: pointer;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   font-size: 15px;
   font-weight: bold;
   height: 40px;
@@ -70,20 +81,43 @@
   list-style: none;
   margin-top: 10px;
   outline: none;
-  padding: 10px 10px;
+  padding: 10px 20px;
   position: relative;
-  text-align: center;
   text-decoration: none;
-  transition: color 100ms;
+  transition: background-color 100ms, border-color 100ms;
+  vertical-align: baseline;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.button-search:hover {
+  background-color: #287050;
+  border: #3ecf8e 1px solid;
+}
+
+.button-post{
+  border-radius: 3px;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: bold;
+  height: 40px;
+  line-height: 20px;
+  list-style: none;
+  margin-top: 10px;
+  outline: none;
+  padding: 10px 20px;
+  position: relative;
+  text-decoration: none;
+  transition: background-color 100ms, border-color 100ms;
   vertical-align: baseline;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
 }
 
-.button-search:hover,
-.button-search:focus {
-  background-color: #287050;
-  border: #3ecf8e 1px solid;
-
+.button-post:hover {
+  background-color: #3a3b3c;
 }
