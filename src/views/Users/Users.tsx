@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import UserCard from '../../components/UserCard/UserCard';
 import FuncButton from '../../components/Button/FuncButton';
 

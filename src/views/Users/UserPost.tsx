@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import PostCard from '../../components/PostCard/PostCard';
@@ -113,11 +113,7 @@ export default function UserPost() {
     }
   };
 
-  const loadName = async (userId: number) => {
-    if(!users[userId])
-      await loadUser(userId)
-    return users[userId].name || 'Unknown'
-  }
+  
   return (
     <div className="w-full">
       <div className="p-5">
