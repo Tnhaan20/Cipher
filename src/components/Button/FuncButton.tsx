@@ -22,6 +22,7 @@ export default function FuncButton({
   isOpen, 
   setIsOpen 
 }: ButtonProps) {
+  
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 

@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./PostCard.css";
+import Modal from "../Modal/Modal";
+import axios from "axios";
 
 interface PostCardProps {
   userId: number;
@@ -12,7 +14,7 @@ interface PostCardProps {
 }
 
 export default function PostCard({
-
+  userId,
   id,
   title,
   body,
@@ -21,24 +23,171 @@ export default function PostCard({
   name,
 }: PostCardProps) {
   const [like, setLike] = useState(false);
+  const [options, setOptions] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(title);
+  const [editedBody, setEditedBody] = useState(body);
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const toggleOptions = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOptions(!options);
+  };
 
   const handleLike = () => {
     setLike(!like);
   };
 
+  useEffect(() => {
+    const closeOptions = () => setOptions(false);
+    if (options) {
+      document.addEventListener('click', closeOptions);
+    }
+    return () => {
+      document.removeEventListener('click', closeOptions);
+    };
+  }, [options]);
+
+  const handleEdit = async () => {
+    try {
+      const response = await axios.patch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
+        title: editedTitle,
+        body: editedBody,
+        userId: userId
+      })
+
+      console.log(editedTitle);
+      console.log(editedBody);
+      console.log(userId);
+      
+      console.log('sending' + {...response.data});
+      
+      if (response.status===200) {
+        console.log('OKKKKKK');
+        
+        setSuccessMessage("Post edited successfully!");
+        setTimeout(() => setSuccessMessage(""), 3000);
+        setIsEditModalOpen(false);
+      } else {
+        throw new Error('Failed to edit post');
+      }
+    } catch (error) {
+      console.error('Error editing post:', error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete(`https://jsonplaceholder.typicode.com/posts/${id}`)
+      
+      if (response.status === 200) {
+        console.log('OK');
+        setSuccessMessage("Post deleted successfully!");
+        setTimeout(() => setSuccessMessage(""), 3000);
+        setIsDeleteModalOpen(false);
+      } else {
+        throw new Error('Failed to delete post');
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
+  };
+
+  const editModalContent = (
+    <div className="">
+      <input
+        type="text"
+        value={editedTitle}
+        onChange={(e) => setEditedTitle(e.target.value)}
+        className="w-full p-2 mb-4 border rounded"
+        placeholder="Title"
+      />
+      <textarea
+        value={editedBody}
+        onChange={(e) => setEditedBody(e.target.value)}
+        className="w-full p-2 mb-4 border rounded"
+        placeholder="Body"
+        rows={4}
+      />
+      <button
+        onClick={handleEdit}
+        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+      >
+        Save Changes
+      </button>
+    </div>
+  );
+
+  const deleteModalContent = (
+    <div className="">
+      <p className="mb-4">Are you sure you want to delete this post?</p>
+      <button
+        onClick={handleDelete}
+        className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600"
+      >
+        Delete
+      </button>
+    </div>
+  );
+
+
+  const optionsMenu = () => {
+    return (
+      <div className="bg-[#242526] options-menu p-2 right-5 mt-2 rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()}>
+        <div className="arrow-up"></div>
+        <button className="options-item" onClick={() => setIsEditModalOpen(true)}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 2048 2048"><path fill="currentColor" d="M384 1920h412l-32 128H256V128h128V0h128v128h256V0h128v128h256V0h128v128h256V0h128v128h128v648q-34 5-66 17t-62 31V256H384zM1848 896q42 0 78 15t64 41t42 63t16 79q0 39-15 76t-43 65l-717 717l-377 94l94-377l717-716q29-29 65-43t76-14m51 249q21-21 21-51q0-31-20-50t-52-20q-14 0-27 4t-23 15l-692 692l-34 135l135-34z"/></svg>
+          <span className="ml-3">
+            Edit post
+          </span>
+        </button>
+        <button className="options-item" onClick={() => setIsDeleteModalOpen(true)}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 1024 1024"><path fill="currentColor" d="M360 184h-8c4.4 0 8-3.6 8-8zh304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32M731.3 840H292.7l-24.2-512h487z"/></svg>
+          <span className="ml-3">
+            Delete post
+          </span>
+        </button>
+      </div>
+    );
+  };
+
   return (
+    <>
     <div className="w-full flex justify-center">
       <div className="post-card">
-        <div className="mb-5">
-          <div className="flex">
-              <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 26 26"><g fill="none"><defs><mask id="pepiconsPencilPersonCheckmarkCircleFilled0"><path fill="#fff" d="M0 0h26v26H0z"/><g fill="#000" fillRule="evenodd" clipRule="evenodd"><path d="M9.8 6a2.5 2.5 0 1 0 0 5a2.5 2.5 0 0 0 0-5M6.3 8.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0"/><path d="M3.8 17.5c0-3.322 2.67-6.5 6-6.5s6 3.178 6 6.5v2a.5.5 0 0 1-1 0v-2c0-2.873-2.32-5.5-5-5.5s-5 2.627-5 5.5v2a.5.5 0 0 1-1 0zM21.154 6.563a.5.5 0 0 1 .194.68l-2.778 5a.5.5 0 0 1-.874-.486l2.778-5a.5.5 0 0 1 .68-.194"/><path d="M14.965 9.465a.5.5 0 0 1 .703-.078l2.778 2.223a.5.5 0 1 1-.625.78l-2.778-2.222a.5.5 0 0 1-.078-.703"/></g></mask></defs><circle cx="13" cy="13" r="13" fill="currentColor" mask="url(#pepiconsPencilPersonCheckmarkCircleFilled0)"/></g></svg> 
-              <p className="pl-3 pt-1">
-                {name}
-              </p>
-          </div>
+      <div className="mb-5 flex justify-between items-center">
+        <div className="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 26 26" className="text-current">
+            <g fill="none">
+              <defs>
+                <mask id="pepiconsPencilPersonCheckmarkCircleFilled0">
+                  <path fill="#fff" d="M0 0h26v26H0z"/>
+                  <g fill="#000" fillRule="evenodd" clipRule="evenodd">
+                    <path d="M9.8 6a2.5 2.5 0 1 0 0 5a2.5 2.5 0 0 0 0-5M6.3 8.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0"/>
+                    <path d="M3.8 17.5c0-3.322 2.67-6.5 6-6.5s6 3.178 6 6.5v2a.5.5 0 0 1-1 0v-2c0-2.873-2.32-5.5-5-5.5s-5 2.627-5 5.5v2a.5.5 0 0 1-1 0zM21.154 6.563a.5.5 0 0 1 .194.68l-2.778 5a.5.5 0 0 1-.874-.486l2.778-5a.5.5 0 0 1 .68-.194"/>
+                    <path d="M14.965 9.465a.5.5 0 0 1 .703-.078l2.778 2.223a.5.5 0 1 1-.625.78l-2.778-2.222a.5.5 0 0 1-.078-.703"/>
+                  </g>
+                </mask>
+              </defs>
+              <circle cx="13" cy="13" r="13" fill="currentColor" mask="url(#pepiconsPencilPersonCheckmarkCircleFilled0)"/>
+            </g>
+          </svg>
+          <p className="pl-3">{name}</p>
         </div>
-        <p>Title: {title}</p>
-        <p className="mx-5 my-2">{body}</p>
+      <div>
+        <button onClick={toggleOptions}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 15 15" className="text-current">
+              <path fill="currentColor" fillRule="evenodd" d="M3.625 7.5a1.125 1.125 0 1 1-2.25 0a1.125 1.125 0 0 1 2.25 0m5 0a1.125 1.125 0 1 1-2.25 0a1.125 1.125 0 0 1 2.25 0M12.5 8.625a1.125 1.125 0 1 0 0-2.25a1.125 1.125 0 0 0 0 2.25" clipRule="evenodd"/>
+            </svg>
+          </button>
+          {options && optionsMenu()}
+          </div>
+          
+      </div>
+
+        <p>Title: {title || editedTitle}</p>
+        <p className="mx-5 my-2">{body || editedBody}</p>
         <div className="w-full grid grid-cols-3 mt-5 border-t border-1 border-[#3e4042]">
           <div className="flex justify-center">
             <button
@@ -74,5 +223,35 @@ export default function PostCard({
         </div>
       </div>
     </div>
+    {isEditModalOpen && (
+        <div className="fixed bg inset-0 flex items-center justify-center z-50">
+          <div className="modal rounded-lg p-8 max-w-md w-full">
+            <h2 className="text-2xl font-bold mb-4">Edit Post {id}</h2>
+            {editModalContent}
+            <button
+              onClick={() => setIsEditModalOpen(false)}
+              className="mt-4 w-full p-2 bg-black"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+      
+      {isDeleteModalOpen && (
+        <div className="fixed bg inset-0 flex items-center justify-center z-50">
+          <div className="modal rounded-lg p-8 max-w-md w-full">
+            <h2 className="text-2xl font-bold mb-4">Delete Post</h2>
+            {deleteModalContent}
+            <button
+              onClick={() => setIsDeleteModalOpen(false)}
+              className="mt-4 w-full bg-gray-300 text-gray-800 p-2 rounded hover:bg-gray-400"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

@@ -195,8 +195,6 @@ body:has(.modal){
   z-index: 50;
 }
 
-
-
 .bg{
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
   backdrop-filter: blur(7px);
