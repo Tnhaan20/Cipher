@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import PostCard from "../../components/PostCard/PostCard";
 import FuncButton from "../../components/Button/FuncButton";
+import Popup from "../../components/PopUp/Popup";
 
 export default function Posts() {
   interface Post {
@@ -41,6 +42,7 @@ export default function Posts() {
   const [isCommentFormValid, setIsCommentFormValid] = useState(false);
   const [commentFormTouched, setCommentFormTouched] = useState({ name: false, email: false, body: false });
   const [activeCommentPostId, setActiveCommentPostId] = useState<number | null>(null);
+  const [popupMessage, setPopupMessage] = useState({ content: "", isShow: false });
 
   useEffect(() => {
     loadPosts();
@@ -173,9 +175,21 @@ export default function Posts() {
       setTouched({ title: false, body: false, userId: false });
       console.log("New post created:", { ...res.data });
       setIsModalOpen(false);
-
+      setPopupMessage({ content: "Post created successfully!", isShow: true });
+      
+      // Hide popup after 3 seconds
+      setTimeout(() => {
+        setPopupMessage({ content: "", isShow: false });
+      }, 3000);
     } catch (error) {
       console.log(error);
+      setPopupMessage({ content: "Error creating post. Please try again.", isShow: true });
+      
+      // Hide error popup after 3 seconds
+      setTimeout(() => {
+        setPopupMessage({ content: "", isShow: false });
+      }, 3000);
+    
     }
   }
 
@@ -229,6 +243,7 @@ export default function Posts() {
             >
               Submit
             </button>
+            
           </div>
         </div>
       </div>
@@ -261,6 +276,7 @@ export default function Posts() {
     validateCommentForm();
   }
 
+  //Submit comment
   const submitComment = async (postId: number) => {
     if (!validateCommentForm()) return;
     try {
@@ -280,6 +296,7 @@ export default function Posts() {
     }
   }
 
+  //Comment Add
   const commentForm = (postId: number) => {
     return (
       <div className="w-full p-4 bg rounded-lg">
@@ -333,8 +350,14 @@ export default function Posts() {
     )
   }
 
+  //Comment Add
+
   return (
     <div className="w-full pt-28">
+      <Popup
+        content={popupMessage.content}
+        isShow={popupMessage.isShow}
+      />
       <div className="grid grid-cols-2 p-5">
         <div className="flex justify-start mr-72">
           <FuncButton
