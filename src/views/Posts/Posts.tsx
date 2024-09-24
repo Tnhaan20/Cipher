@@ -21,6 +21,7 @@ export default function Posts() {
     userId: number;
     name: string;
   }
+
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [allPosts, setAllPosts] = useState<Post[] | null>(null);
   const [comments, setComments] = useState<{ [key: number]: Comment[] }>({});
@@ -30,9 +31,20 @@ export default function Posts() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [newPost, setNewPost] = useState({ title: "", body: "", userId: "" });
+  const [formErrors, setFormErrors] = useState({ title: "", body: "", userId: "" });
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [touched, setTouched] = useState({ title: false, body: false, userId: false });
+  const [validUserIds, setValidUserIds] = useState<number[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newComment, setNewComment] = useState({ name: "", email: "", body: "" });
+  const [commentFormErrors, setCommentFormErrors] = useState({ name: "", email: "", body: "" });
+  const [isCommentFormValid, setIsCommentFormValid] = useState(false);
+  const [commentFormTouched, setCommentFormTouched] = useState({ name: false, email: false, body: false });
+  const [activeCommentPostId, setActiveCommentPostId] = useState<number | null>(null);
 
   useEffect(() => {
     loadPosts();
+    loadUserID();
   }, []);
 
   useEffect(() => {
@@ -40,6 +52,15 @@ export default function Posts() {
       searchPosts();
     }
   }, [searchInput]);
+
+  const loadUserID = async () => {
+    try {
+      const res = await axios.get(`https://jsonplaceholder.typicode.com/users`)
+      const UID = res.data.map((users: any) => users.id)
+      setValidUserIds(UID)
+      } catch (error) {
+    }
+  }
 
   const loadPosts = async () => {
     try {
@@ -111,59 +132,203 @@ export default function Posts() {
     }
   };
 
-  const createPost = async() => {
+  const validateForm = () => {
+    const errors = {
+      title: newPost.title.trim() === "" ? "Title is required" : "",
+      body: newPost.body.trim() === "" ? "Body is required" : "",
+      userId: newPost.userId.trim() === "" ? "User ID is required" : 
+              !validUserIds.includes(parseInt(newPost.userId)) ? "Invalid User ID" : ""
+    };
+    setFormErrors(errors);
+    const isValid = Object.values(errors).every(error => error === "");
+    setIsFormValid(isValid);
+    return isValid;
+  };
+
+  const handleInputChange = (e: any) => {
+    const { name, value } = e.target;
+    setNewPost(prev => ({ ...prev, [name]: value }));
+    setTouched(prev => ({ ...prev, [name]: true }));
+    validateForm();
+  }
+
+  const handleInputBlur = (e: any) => {
+    const { name } = e.target;
+    setTouched(prev => ({ ...prev, [name]: true }));
+    validateForm();
+  }
+
+  const createPost = async () => {
+    if (!validateForm()) return;
     try {
-      console.log('Createing post');
+      console.log('Creating post');
       const res = await axios.post(`https://jsonplaceholder.typicode.com/posts`, {
         title: newPost.title,
         body: newPost.body,
         userId: parseInt(newPost.userId)
-      })
+      });
+      setPosts(prevPosts => [res.data, ...(prevPosts || [])]);
+      setAllPosts(prevPosts => [res.data, ...(prevPosts || [])]);
+      setNewPost({ title: "", body: "", userId: "" });
+      setTouched({ title: false, body: false, userId: false });
       console.log("New post created:", { ...res.data });
-      setPosts((prevPosts => [res.data, ...(prevPosts || [])]))
-      setAllPosts((prevPosts => [res.data, ...(prevPosts || [])]))
-      setNewPost({title: "", body: "", userId: ""})
+      setIsModalOpen(false);
+
     } catch (error) {
-        console.log(error);
-        
+      console.log(error);
     }
   }
 
-  const handleInputChange = (error: any) => {
-    const { name, value } = error.target;
-    setNewPost((prev) => ({ ...prev, [name]: value }));
-  };
-
-
   const createPostForm = () => {
-    return(
-      <div className="w-full h-full flex justify-start">
+    return (
+      <div className="w-full h-full">
         <div className="flex flex-col p-5">
-          <div> 
+          <div className="w-full"> 
             <span>Title</span>
-            <input className="p-3 ml-5 mb-5" name="title" value={newPost.title} onChange={handleInputChange} type="text" placeholder="Title"/>
+            <input 
+              className={`p-3 w-full mb-1 ${touched.title && formErrors.title ? 'border-red-500' : ''}`} 
+              name="title" 
+              value={newPost.title} 
+              onChange={handleInputChange}
+              onBlur={handleInputBlur}
+              type="text" 
+              placeholder="Title"
+            />
+            {touched.title && formErrors.title && <p className="text-red-500 text-sm mb-2">{formErrors.title}</p>}
           </div>
-          <div> 
+          <div className="w-full"> 
             <span>Body</span>
-            <input className="p-3 ml-5 mb-5" name="body" value={newPost.body} onChange={handleInputChange} type="text" placeholder="Body"/>
+            <textarea 
+              className={`p-3 w-full mb-1 ${touched.body && formErrors.body ? 'border-red-500' : ''}`} 
+              name="body" 
+              value={newPost.body} 
+              onChange={handleInputChange}
+              onBlur={handleInputBlur}
+              placeholder="Body"
+            />
+            {touched.body && formErrors.body && <p className="text-red-500 text-sm mb-2">{formErrors.body}</p>}
           </div>
-          <div>
+          <div className="w-full">
             <span>User ID</span>
             <input
-              className="p-3 ml-5 mb-5"
+              className={`p-3 w-full mb-1 ${touched.userId && formErrors.userId ? 'border-red-500' : ''}`}
               type="number"
               name="userId"
               placeholder="User ID"
               value={newPost.userId}
               onChange={handleInputChange}
+              onBlur={handleInputBlur}
             />
+            {touched.userId && formErrors.userId && <p className="text-red-500 text-sm mb-2">{formErrors.userId}</p>}
+          </div>
+          <div className="w-full flex items-end align-bottom mt-4">
+            <button 
+              className={`${!isFormValid ? 'button-false w-full justify-center' : 'button-search w-full justify-center'}`} 
+              onClick={createPost}
+              disabled={!isFormValid}
+            >
+              Submit
+            </button>
           </div>
         </div>
-        <div className="w-full flex items-end align-bottom">
-          <button onClick={createPost}>
-            Submit
-          </button>
+      </div>
+    )
+  }
+
+  const validateCommentForm = () => {
+    const errors = {
+      name: newComment.name.trim() === "" ? "Name is required" : "",
+      email: newComment.email.trim() === "" ? "Email is required" : 
+             !/\S+@\S+\.\S+/.test(newComment.email) ? "Invalid email format" : "",
+      body: newComment.body.trim() === "" ? "Comment body is required" : ""
+    };
+    setCommentFormErrors(errors);
+    const isValid = Object.values(errors).every(error => error === "");
+    setIsCommentFormValid(isValid);
+    return isValid;
+  };
+
+  const handleCommentInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setNewComment(prev => ({ ...prev, [name]: value }));
+    setCommentFormTouched(prev => ({ ...prev, [name]: true }));
+    validateCommentForm();
+  }
+
+  const handleCommentInputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name } = e.target;
+    setCommentFormTouched(prev => ({ ...prev, [name]: true }));
+    validateCommentForm();
+  }
+
+  const submitComment = async (postId: number) => {
+    if (!validateCommentForm()) return;
+    try {
+      const response = await axios.post(`https://jsonplaceholder.typicode.com/comments`, {
+        postId,
+        ...newComment
+      });
+      setComments(prev => ({
+        ...prev,
+        [postId]: [...(prev[postId] || []), response.data]
+      }));
+      setNewComment({ name: "", email: "", body: "" });
+      setCommentFormTouched({ name: false, email: false, body: false });
+      setActiveCommentPostId(null);
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+    }
+  }
+
+  const commentForm = (postId: number) => {
+    return (
+      <div className="w-full p-4 bg rounded-lg">
+        <h3 className="text-lg font-semibold mb-2">Add a Comment</h3>
+        <div className="mb-2">
+          <span>Name</span>
+          <input
+            className={`p-2 w-full ${commentFormTouched.name && commentFormErrors.name ? 'border-red-500' : ''}`}
+            name="name"
+            value={newComment.name}
+            onChange={handleCommentInputChange}
+            onBlur={handleCommentInputBlur}
+            type="text"
+            placeholder="Name"
+          />
+          {commentFormTouched.name && commentFormErrors.name && <p className="text-red-500 text-sm">{commentFormErrors.name}</p>}
         </div>
+        <div className="mb-2">
+          <span>Email</span>
+          <input
+            className={`p-2 w-full ${commentFormTouched.email && commentFormErrors.email ? 'border-red-500' : ''}`}
+            name="email"
+            value={newComment.email}
+            onChange={handleCommentInputChange}
+            onBlur={handleCommentInputBlur}
+            type="email"
+            placeholder="Email"
+          />
+          {commentFormTouched.email && commentFormErrors.email && <p className="text-red-500 text-sm">{commentFormErrors.email}</p>}
+        </div>
+        <div className="mb-2">
+          <span>Comment Content</span>
+          <textarea
+            className={`p-2 w-full ${commentFormTouched.body && commentFormErrors.body ? 'border-red-500' : ''}`}
+            name="body"
+            value={newComment.body}
+            onChange={handleCommentInputChange}
+            onBlur={handleCommentInputBlur}
+            placeholder="Comment"
+          />
+          {commentFormTouched.body && commentFormErrors.body && <p className="text-red-500 text-sm">{commentFormErrors.body}</p>}
+        </div>
+        <button
+          className={`w-full p-2 ${!isCommentFormValid ? 'button-false' : 'button-search justify-center'}`}
+          onClick={() => submitComment(postId)}
+          disabled={!isCommentFormValid}
+        >
+          Submit Comment
+        </button>
       </div>
     )
   }
@@ -177,6 +342,8 @@ export default function Posts() {
             type="create"
             modalTitle="Create post"
             modalContent={createPostForm()}
+            isOpen={isModalOpen}
+            setIsOpen={setIsModalOpen}
           />
         </div>
         <div className="flex justify-end">
@@ -211,6 +378,13 @@ export default function Posts() {
                 />
                 {visibleComments[post.id] && comments[post.id] && (
                   <div className="mt-4 ml-4">
+                    <button
+                      className="w-full button-cmt rounded-3xl mb-4"
+                      onClick={() => setActiveCommentPostId(activeCommentPostId === post.id ? null : post.id)}
+                    >
+                      {activeCommentPostId === post.id ? "Cancel" : "Make a comment"}
+                    </button>
+                    {activeCommentPostId === post.id && commentForm(post.id)}
                     <h3 className="text-lg font-semibold">
                       Comments of post {post.id}:
                     </h3>

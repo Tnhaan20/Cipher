@@ -95,6 +95,61 @@
   border: #3ecf8e 1px solid;
 }
 
+
+.button-cmt {
+  background-color: #3a3b3c;
+  border: #5c5e60 1px solid;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  align-items: center;
+  font-size: 15px;
+  font-weight: bold;
+  height: 40px;
+  line-height: 20px;
+  list-style: none;
+  outline: none;
+  padding: 10px 20px;
+  position: relative;
+  text-decoration: none;
+  transition: background-color 100ms, border-color 100ms;
+  vertical-align: baseline;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+.button-cmt:hover {
+  background-color: #545657;
+  border: #545657 1px solid;
+}
+
+.button-false {
+  background-color: #505151;
+  border: #505151 1px solid;
+  border-radius: 3px;
+  box-sizing: border-box;
+  color: #858686;
+  display: inline-flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: bold;
+  height: 40px;
+  line-height: 20px;
+  list-style: none;
+  margin-top: 10px;
+  outline: none;
+  padding: 10px 20px;
+  position: relative;
+  text-decoration: none;
+  transition: background-color 100ms, border-color 100ms;
+  vertical-align: baseline;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  cursor: not-allowed;
+}
+
+
 .button-post{
   border-radius: 3px;
   box-sizing: border-box;

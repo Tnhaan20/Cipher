@@ -87,9 +87,7 @@ export default function User() {
     <div className="w-full pt-28">
       <div className="grid grid-cols-2">
         <div className="mr-72">
-          <FuncButton
-            name="Create user"
-          />
+          
         </div>
         <div className="flex justify-end">
           <input
