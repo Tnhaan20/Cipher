@@ -1,36 +1,66 @@
+import React, { useState } from "react";
+import Modal from "../Modal/Modal";
 
-interface buttonName{
-    name: string
+type buttonType = 'create' | 'delete' | 'edit' | 'view'
+
+interface ButtonProps {
+  name: string;
+  type: buttonType;
+  modalTitle: string;
+  modalContent: React.ReactNode;
+  onClick?: () => void;
 }
 
-export default function FuncButton({name}: buttonName) {
+export default function FuncButton({ name, type, modalTitle, modalContent, onClick }: ButtonProps) {
+  const [isModalOpen, setModalOpen] = useState(false);
 
+  const openModal = () => setModalOpen(true);
+  const closeModal = () => setModalOpen(false);
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      openModal();
+    }
+  };
+
+  const getButtonClass = () => {
+    switch(type) {
+      case 'create': return 'bg-green-500 hover:bg-green-600';
+      case 'delete': return 'bg-red-500 hover:bg-red-600';
+      case 'edit': return 'bg-blue-500 hover:bg-blue-600';
+      case 'view': return 'bg-gray-500 hover:bg-gray-600';
+      default: return 'bg-gray-500 hover:bg-gray-600';
+    }
+  };
+
+  const getIcon = () => {
+    switch(type) {
+      case 'create': return '+';
+      case 'delete': return '×';
+      case 'edit': return '✎';
+      case 'view': return '👁';
+      default: return '';
+    }
+  };
 
   return (
     <div className="w-full flex justify-center">
-      <button className="button-search flex items-center">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="20"
-          height="20"
-          viewBox="0 0 1024 1024"
-          className="mr-2"
-        >
-          <path
-            fill="currentColor"
-            d="M352 480h320a32 32 0 1 1 0 64H352a32 32 0 0 1 0-64"
-          />
-          <path
-            fill="currentColor"
-            d="M480 672V352a32 32 0 1 1 64 0v320a32 32 0 0 1-64 0"
-          />
-          <path
-            fill="currentColor"
-            d="M512 896a384 384 0 1 0 0-768a384 384 0 0 0 0 768m0 64a448 448 0 1 1 0-896a448 448 0 0 1 0 896"
-          />
-        </svg>
+      <button 
+        onClick={handleClick} 
+        className={`button-search flex items-center text-white px-4 py-2 rounded ${getButtonClass()}`}
+      >
+        <span className="mr-2">{getIcon()}</span>
         {name}
       </button>
+      <Modal 
+        isOpen={isModalOpen} 
+        isClose={closeModal}
+        title={modalTitle}
+      >
+        {modalContent}
+      </Modal>
     </div>
   );
 }

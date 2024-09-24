@@ -29,6 +29,7 @@ export default function Posts() {
   const [searchInput, setSearchInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [newPost, setNewPost] = useState({ title: "", body: "", userId: "" });
 
   useEffect(() => {
     loadPosts();
@@ -110,12 +111,72 @@ export default function Posts() {
     }
   };
 
+  const createPost = async() => {
+    try {
+      console.log('Createing post');
+      const res = await axios.post(`https://jsonplaceholder.typicode.com/posts`, {
+        title: newPost.title,
+        body: newPost.body,
+        userId: parseInt(newPost.userId)
+      })
+      console.log("New post created:", { ...res.data });
+      setPosts((prevPosts => [res.data, ...(prevPosts || [])]))
+      setAllPosts((prevPosts => [res.data, ...(prevPosts || [])]))
+      setNewPost({title: "", body: "", userId: ""})
+    } catch (error) {
+        console.log(error);
+        
+    }
+  }
+
+  const handleInputChange = (error: any) => {
+    const { name, value } = error.target;
+    setNewPost((prev) => ({ ...prev, [name]: value }));
+  };
+
+
+  const createPostForm = () => {
+    return(
+      <div className="w-full h-full flex justify-start">
+        <div className="flex flex-col p-5">
+          <div> 
+            <span>Title</span>
+            <input className="p-3 ml-5 mb-5" name="title" value={newPost.title} onChange={handleInputChange} type="text" placeholder="Title"/>
+          </div>
+          <div> 
+            <span>Body</span>
+            <input className="p-3 ml-5 mb-5" name="body" value={newPost.body} onChange={handleInputChange} type="text" placeholder="Body"/>
+          </div>
+          <div>
+            <span>User ID</span>
+            <input
+              className="p-3 ml-5 mb-5"
+              type="number"
+              name="userId"
+              placeholder="User ID"
+              value={newPost.userId}
+              onChange={handleInputChange}
+            />
+          </div>
+        </div>
+        <div className="w-full flex items-end align-bottom">
+          <button onClick={createPost}>
+            Submit
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="w-full pt-28">
       <div className="grid grid-cols-2 p-5">
         <div className="flex justify-start mr-72">
           <FuncButton
             name="Create post"
+            type="create"
+            modalTitle="Create post"
+            modalContent={createPostForm()}
           />
         </div>
         <div className="flex justify-end">
@@ -138,7 +199,7 @@ export default function Posts() {
           {posts.map((post) => {
             loadUser(post.userId);
             return (
-              <div key={post.id} className="w-[50%] bg-[#171717] rounded-lg overflow-hidden mb-4">
+              <div key={post.id} className="w-[70%] bg-[#171717] rounded-lg overflow-hidden mb-4">
                 <PostCard
                   userId={post.userId}
                   id={post.id}
