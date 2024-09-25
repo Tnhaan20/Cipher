@@ -121,8 +121,7 @@ export default function Posts() {
     }
 
     const filteredPosts = allPosts?.filter(post => 
-      post.title.toLowerCase().includes(searchInput.toLowerCase()) ||
-      post.body.toLowerCase().includes(searchInput.toLowerCase())
+      post.title.toLowerCase().includes(searchInput.toLowerCase())
     ) || null;
 
     setPosts(filteredPosts);
@@ -340,7 +339,7 @@ export default function Posts() {
           {commentFormTouched.body && commentFormErrors.body && <p className="text-red-500 text-sm">{commentFormErrors.body}</p>}
         </div>
         <button
-          className={`w-full p-2 ${!isCommentFormValid ? 'button-false' : 'button-search justify-center'}`}
+          className={`w-full p-2 ${!isCommentFormValid ? 'button-false justify-center' : 'button-search justify-center'}`}
           onClick={() => submitComment(postId)}
           disabled={!isCommentFormValid}
         >
@@ -353,11 +352,12 @@ export default function Posts() {
   //Comment Add
 
   return (
+    <>
+    <Popup
+      content={popupMessage.content}
+      isShow={popupMessage.isShow}
+    />
     <div className="w-full pt-28">
-      <Popup
-        content={popupMessage.content}
-        isShow={popupMessage.isShow}
-      />
       <div className="grid grid-cols-2 p-5">
         <div className="flex justify-start mr-72">
           <FuncButton
@@ -427,5 +427,6 @@ export default function Posts() {
         </div>
       ) : null}
     </div>
+    </>
   );
 }

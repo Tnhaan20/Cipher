@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import AlbumCard from "../../components/AlbumCard/AlbumCard";
 import FuncButton from "../../components/Button/FuncButton";
+import Popup from "../../components/PopUp/Popup";
 
 interface Album {
   userId: number;
@@ -15,7 +16,10 @@ export default function Album() {
   const [searchInput, setSearchInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [popupMessage, setPopupMessage] = useState({content: "", isShow: false})
 
+
+  
   useEffect(() => {
     loadAlbums();
   }, []);
@@ -61,13 +65,17 @@ export default function Album() {
     searchAlbum();
   }, [searchInput]);
 
+  
+
   return (
     <div className="w-full text-white pt-28 px-4 min-h-screen">
+      <Popup
+      content={popupMessage.content}
+      isShow={popupMessage.isShow}
+      />
       <div className="grid grid-cols-2 p-5">
         <div className="mr-72">
-          <FuncButton
-            name="Create album"
-          />
+          
         </div>
         <div className="flex justify-end">
           <input

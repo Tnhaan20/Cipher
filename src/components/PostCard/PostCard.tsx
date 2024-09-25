@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./PostCard.css";
-import Modal from "../Modal/Modal";
 import axios from "axios";
+import Popup from "../PopUp/Popup";
 
 interface PostCardProps {
   userId: number;
@@ -16,8 +16,8 @@ interface PostCardProps {
 export default function PostCard({
   userId,
   id,
-  title,
-  body,
+  title: initialTitle,
+  body: initialBody,
   onViewComments,
   showComments,
   name,
@@ -26,9 +26,11 @@ export default function PostCard({
   const [options, setOptions] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(title);
-  const [editedBody, setEditedBody] = useState(body);
-  const [successMessage, setSuccessMessage] = useState("");
+  const [currentTitle, setCurrentTitle] = useState(initialTitle);
+  const [currentBody, setCurrentBody] = useState(initialBody);
+  const [editedTitle, setEditedTitle] = useState(initialTitle);
+  const [editedBody, setEditedBody] = useState(initialBody);
+  const [popupMessage, setPopupMessage] = useState({ content: "", isShow: false });
 
   const toggleOptions = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -50,27 +52,28 @@ export default function PostCard({
   }, [options]);
 
   const handleEdit = async () => {
+    if (currentTitle === editedTitle && currentBody === editedBody) return;
+
     try {
       const response = await axios.patch(`https://jsonplaceholder.typicode.com/posts/${id}`, {
         title: editedTitle,
         body: editedBody,
         userId: userId
-      })
-
-      console.log(editedTitle);
-      console.log(editedBody);
-      console.log(userId);
+      });
       
-      console.log('sending' + {...response.data});
-      
-      if (response.status===200) {
-        console.log('OKKKKKK');
-        
-        setSuccessMessage("Post edited successfully!");
-        setTimeout(() => setSuccessMessage(""), 3000);
+      if (response.status === 200) {
+        setCurrentTitle(editedTitle);
+        setCurrentBody(editedBody);
+        setPopupMessage({ content: "Post edited successfully!", isShow: true });
+        setTimeout(() => {
+          setPopupMessage({ content: "", isShow: false });
+        }, 3000);
         setIsEditModalOpen(false);
       } else {
-        throw new Error('Failed to edit post');
+        setPopupMessage({ content: "Post edit failed!", isShow: true });
+        setTimeout(() => {
+          setPopupMessage({ content: "", isShow: false });
+        }, 3000);
       }
     } catch (error) {
       console.error('Error editing post:', error);
@@ -79,23 +82,30 @@ export default function PostCard({
 
   const handleDelete = async () => {
     try {
-      const response = await axios.delete(`https://jsonplaceholder.typicode.com/posts/${id}`)
+      const response = await axios.delete(`https://jsonplaceholder.typicode.com/posts/${id}`);
       
       if (response.status === 200) {
-        console.log('OK');
-        setSuccessMessage("Post deleted successfully!");
-        setTimeout(() => setSuccessMessage(""), 3000);
+        setPopupMessage({ content: "Delete post successfully!", isShow: true });
+        setTimeout(() => {
+          setPopupMessage({ content: "", isShow: false });
+        }, 3000);
         setIsDeleteModalOpen(false);
       } else {
-        throw new Error('Failed to delete post');
+        setPopupMessage({ content: "Delete post failed!", isShow: true });
+        setTimeout(() => {
+          setPopupMessage({ content: "", isShow: false });
+        }, 3000);
       }
     } catch (error) {
       console.error('Error deleting post:', error);
     }
   };
 
+  const isEdited = currentTitle !== editedTitle || currentBody !== editedBody;
+
   const editModalContent = (
     <div className="">
+      <span>Title</span>
       <input
         type="text"
         value={editedTitle}
@@ -103,6 +113,7 @@ export default function PostCard({
         className="w-full p-2 mb-4 border rounded"
         placeholder="Title"
       />
+      <span>Body</span>
       <textarea
         value={editedBody}
         onChange={(e) => setEditedBody(e.target.value)}
@@ -112,9 +123,16 @@ export default function PostCard({
       />
       <button
         onClick={handleEdit}
-        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+        className={`w-full ${isEdited ? 'button-search' : 'button-false'} justify-center`}
+        disabled={!isEdited}
       >
         Save Changes
+      </button>
+      <button
+        onClick={() => setIsEditModalOpen(false)}
+        className="mt-4 w-full bg-gray-300 text-gray-800 p-2 rounded hover:bg-gray-400"
+      >
+        Cancel
       </button>
     </div>
   );
@@ -128,9 +146,14 @@ export default function PostCard({
       >
         Delete
       </button>
+      <button
+        onClick={() => setIsDeleteModalOpen(false)}
+        className="mt-4 w-full bg-gray-300 text-gray-800 p-2 rounded hover:bg-gray-400"
+      >
+        Cancel
+      </button>
     </div>
   );
-
 
   const optionsMenu = () => {
     return (
@@ -154,66 +177,67 @@ export default function PostCard({
 
   return (
     <>
-    <div className="w-full flex justify-center">
-      <div className="post-card">
-      <div className="mb-5 flex justify-between items-center">
-        <div className="flex items-center">
-          <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 26 26" className="text-current">
-            <g fill="none">
-              <defs>
-                <mask id="pepiconsPencilPersonCheckmarkCircleFilled0">
-                  <path fill="#fff" d="M0 0h26v26H0z"/>
-                  <g fill="#000" fillRule="evenodd" clipRule="evenodd">
-                    <path d="M9.8 6a2.5 2.5 0 1 0 0 5a2.5 2.5 0 0 0 0-5M6.3 8.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0"/>
-                    <path d="M3.8 17.5c0-3.322 2.67-6.5 6-6.5s6 3.178 6 6.5v2a.5.5 0 0 1-1 0v-2c0-2.873-2.32-5.5-5-5.5s-5 2.627-5 5.5v2a.5.5 0 0 1-1 0zM21.154 6.563a.5.5 0 0 1 .194.68l-2.778 5a.5.5 0 0 1-.874-.486l2.778-5a.5.5 0 0 1 .68-.194"/>
-                    <path d="M14.965 9.465a.5.5 0 0 1 .703-.078l2.778 2.223a.5.5 0 1 1-.625.78l-2.778-2.222a.5.5 0 0 1-.078-.703"/>
-                  </g>
-                </mask>
-              </defs>
-              <circle cx="13" cy="13" r="13" fill="currentColor" mask="url(#pepiconsPencilPersonCheckmarkCircleFilled0)"/>
-            </g>
-          </svg>
-          <p className="pl-3">{name}</p>
-        </div>
-      <div>
-        <button onClick={toggleOptions}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 15 15" className="text-current">
-              <path fill="currentColor" fillRule="evenodd" d="M3.625 7.5a1.125 1.125 0 1 1-2.25 0a1.125 1.125 0 0 1 2.25 0m5 0a1.125 1.125 0 1 1-2.25 0a1.125 1.125 0 0 1 2.25 0M12.5 8.625a1.125 1.125 0 1 0 0-2.25a1.125 1.125 0 0 0 0 2.25" clipRule="evenodd"/>
-            </svg>
-          </button>
-          {options && optionsMenu()}
-          </div>
-          
-      </div>
-
-        <p>Title: {title || editedTitle}</p>
-        <p className="mx-5 my-2">{body || editedBody}</p>
-        <div className="w-full grid grid-cols-3 mt-5 border-t border-1 border-[#3e4042]">
-          <div className="flex justify-center">
-            <button
-              onClick={handleLike}
-              className={`button-post w-full mx-2 flex items-center justify-center ${like ? "text-[#3ecf8e]" : ""}`}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48" className="mr-2">
-                <g fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="4"
-                >
-                  <path d="M27.6 18.6v-7.2A5.4 5.4 0 0 0 22.2 6L15 22.2V42h20.916a3.6 3.6 0 0 0 3.6-3.06L42 22.74a3.6 3.6 0 0 0-3.6-4.14z" />
-                  <path fill="currentColor" d="M15 22h-4.806C8.085 21.963 6.283 23.71 6 25.8v12.6a4.16 4.16 0 0 0 4.194 3.6H15z"
-                  />
+      <Popup
+        content={popupMessage.content}
+        isShow={popupMessage.isShow}
+      />
+      <div className="w-full flex justify-center">
+        <div className="post-card">
+          <div className="mb-5 flex justify-between items-center">
+            <div className="flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 26 26" className="text-current">
+                <g fill="none">
+                  <defs>
+                    <mask id="pepiconsPencilPersonCheckmarkCircleFilled0">
+                      <path fill="#fff" d="M0 0h26v26H0z"/>
+                      <g fill="#000" fillRule="evenodd" clipRule="evenodd">
+                        <path d="M9.8 6a2.5 2.5 0 1 0 0 5a2.5 2.5 0 0 0 0-5M6.3 8.5a3.5 3.5 0 1 1 7 0a3.5 3.5 0 0 1-7 0"/>
+                        <path d="M3.8 17.5c0-3.322 2.67-6.5 6-6.5s6 3.178 6 6.5v2a.5.5 0 0 1-1 0v-2c0-2.873-2.32-5.5-5-5.5s-5 2.627-5 5.5v2a.5.5 0 0 1-1 0zM21.154 6.563a.5.5 0 0 1 .194.68l-2.778 5a.5.5 0 0 1-.874-.486l2.778-5a.5.5 0 0 1 .68-.194"/>
+                        <path d="M14.965 9.465a.5.5 0 0 1 .703-.078l2.778 2.223a.5.5 0 1 1-.625.78l-2.778-2.222a.5.5 0 0 1-.078-.703"/>
+                      </g>
+                    </mask>
+                  </defs>
+                  <circle cx="13" cy="13" r="13" fill="currentColor" mask="url(#pepiconsPencilPersonCheckmarkCircleFilled0)"/>
                 </g>
               </svg>
-              {like ? "Liked" : "Like"}
-            </button>
+              <p className="pl-3">{name}</p>
+            </div>
+            <div>
+              <button onClick={toggleOptions}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 15 15" className="text-current">
+                  <path fill="currentColor" fillRule="evenodd" d="M3.625 7.5a1.125 1.125 0 1 1-2.25 0a1.125 1.125 0 0 1 2.25 0m5 0a1.125 1.125 0 1 1-2.25 0a1.125 1.125 0 0 1 2.25 0M12.5 8.625a1.125 1.125 0 1 0 0-2.25a1.125 1.125 0 0 0 0 2.25" clipRule="evenodd"/>
+                </svg>
+              </button>
+              {options && optionsMenu()}
+            </div>
           </div>
-          <div className="flex justify-center">
-            <button
-              onClick={() => onViewComments(id)}
-              className="w-full button-post mt-3 mx-2 flex items-center justify-center"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" className="mr-2" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 21a9 9 0 1 0-9-9c0 1.488.36 2.891 1 4.127L3 21l4.873-1c1.236.64 2.64 1 4.127 1"/></svg>
-              {showComments ? "Hide Comments" : "Comments"}
-            </button>
-          </div>
+
+          <p>Title: {currentTitle}</p>
+          <p className="mx-5 my-2">{currentBody}</p>
+          <div className="w-full grid grid-cols-3 mt-5 border-t border-1 border-[#3e4042]">
+            <div className="flex justify-center">
+              <button
+                onClick={handleLike}
+                className={`button-post w-full mx-2 flex items-center justify-center ${like ? "text-[#3ecf8e]" : ""}`}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 48 48" className="mr-2">
+                  <g fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth="4">
+                    <path d="M27.6 18.6v-7.2A5.4 5.4 0 0 0 22.2 6L15 22.2V42h20.916a3.6 3.6 0 0 0 3.6-3.06L42 22.74a3.6 3.6 0 0 0-3.6-4.14z" />
+                    <path fill="currentColor" d="M15 22h-4.806C8.085 21.963 6.283 23.71 6 25.8v12.6a4.16 4.16 0 0 0 4.194 3.6H15z" />
+                  </g>
+                </svg>
+                {like ? "Liked" : "Like"}
+              </button>
+            </div>
+            <div className="flex justify-center">
+              <button
+                onClick={() => onViewComments(id)}
+                className="w-full button-post mt-3 mx-2 flex items-center justify-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" className="mr-2" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 21a9 9 0 1 0-9-9c0 1.488.36 2.891 1 4.127L3 21l4.873-1c1.236.64 2.64 1 4.127 1"/></svg>
+                {showComments ? "Hide Comments" : "Comments"}
+              </button>
+            </div>
           <div className="flex justify-center">
             <button className="w-full button-post mt-3 mx-2 flex items-center justify-center">
               <svg className="mr-2" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><path fill="currentColor" fillRule="evenodd" d="M12.207 2.232a.75.75 0 0 0 .025 1.06l4.146 3.958H6.375a5.375 5.375 0 0 0 0 10.75H9.25a.75.75 0 0 0 0-1.5H6.375a3.875 3.875 0 0 1 0-7.75h10.003l-4.146 3.957a.75.75 0 0 0 1.036 1.085l5.5-5.25a.75.75 0 0 0 0-1.085l-5.5-5.25a.75.75 0 0 0-1.06.025Z" clipRule="evenodd"/></svg>
@@ -225,15 +249,9 @@ export default function PostCard({
     </div>
     {isEditModalOpen && (
         <div className="fixed bg inset-0 flex items-center justify-center z-50">
-          <div className="modal rounded-lg p-8 max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4">Edit Post {id}</h2>
+          <div className="modal rounded-lg p-8 max-w-md  w-full">
+            <h2 className="text-2xl text-center font-bold mb-4">Edit Post {id}</h2>
             {editModalContent}
-            <button
-              onClick={() => setIsEditModalOpen(false)}
-              className="mt-4 w-full p-2 bg-black"
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
@@ -241,14 +259,8 @@ export default function PostCard({
       {isDeleteModalOpen && (
         <div className="fixed bg inset-0 flex items-center justify-center z-50">
           <div className="modal rounded-lg p-8 max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4">Delete Post</h2>
+            <h2 className="text-2xl text-center font-bold mb-4">Delete Post</h2>
             {deleteModalContent}
-            <button
-              onClick={() => setIsDeleteModalOpen(false)}
-              className="mt-4 w-full bg-gray-300 text-gray-800 p-2 rounded hover:bg-gray-400"
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}
