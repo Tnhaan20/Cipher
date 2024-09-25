@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import PostCard from '../../components/PostCard/PostCard';
 import FuncButton from '../../components/Button/FuncButton';
+import Popup from '../../components/PopUp/Popup';
 
 interface Post {
   userId: number;
@@ -332,6 +333,10 @@ export default function UserPost() {
   }
   return (
     <div className="w-full">
+      <Popup
+      content={popupMessage.content}
+      isShow={popupMessage.isShow}
+      />
       <div className="grid grid-cols-2 p-5">
         <div className="grid-cols-1 mr-36 ">
         <FuncButton
