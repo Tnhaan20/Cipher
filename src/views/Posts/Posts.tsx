@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PostCard from "../../components/PostCard/PostCard";
-import FuncButton from "../../components/Button/FuncButton";
+import FuncButton from "../../components/Button/Button";
 import Popup from "../../components/PopUp/Popup";
 
 export default function Posts() {

@@ -15,10 +15,16 @@ export default function UserAlbum() {
   const [searchInput, setSearchInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [allAlbums, setAllAlbums] = useState<UserAlbum[]>([]);
 
   useEffect(() => {
     loadUserAlbums();
   }, [id]);
+  
+  useEffect(() => {
+    searchAlbum();
+  }, [searchInput]);
+
 
   const loadUserAlbums = async () => {
     try {
@@ -28,6 +34,7 @@ export default function UserAlbum() {
         setError("No albums found for this user.");
         setAlbums(null);
       } else {
+        setAllAlbums(response.data)
         setAlbums(response.data);
         setError(null);
       }
@@ -40,58 +47,38 @@ export default function UserAlbum() {
     }
   };
 
-  const searchAlbum = async () => {
+  const searchAlbum = () => {
     if (!searchInput.trim()) {
-      loadUserAlbums();
+      setAlbums(allAlbums);
+      setError(null);
       return;
     }
 
-    try {
-      setLoading(true);
-      if (!/^\d+$/.test(searchInput)) {
-        setError("Please enter a valid album ID (positive integer only).");
-        setAlbums(null);
-        return;
-      }
+    const filteredAlbums = allAlbums.filter(album =>
+      album.title.toLowerCase().includes(searchInput.toLowerCase())
+    );
 
-      const albumId = parseInt(searchInput, 10);
-      const response = await axios.get<UserAlbum>(
-        `https://jsonplaceholder.typicode.com/albums/${albumId}`
-      );
-      
-      if (response.data.userId.toString() !== id) {
-        setError("Album not found for this user. Please try a different ID.");
-        setAlbums(null);
-      } else {
-        setAlbums([response.data]);
-        setError(null);
-      }
-    } catch (error) {
-      console.error("Error fetching album:", error);
-      setError("Album not found. Please try a different ID.");
-      setAlbums(null);
-    } finally {
-      setLoading(false);
+    if (filteredAlbums.length === 0) {
+      setError("No albums found matching the search criteria.");
+    } else {
+      setError(null);
     }
+
+    setAlbums(filteredAlbums);
   };
 
   return (
     <div className="w-full text-white">
       <div className="w-full flex justify-center p-5">
         <div className="flex">
-          <input
+        <input
             type="text"
             className="search-input p-2 h-11 mt-2 mr-2 w-96"
-            placeholder="Search album by id"
+            placeholder="Search albums by title"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
-          <button
-            className="button-search"
-            onClick={searchAlbum}
-          >
-            Search
-          </button>
+          
         </div>
       </div>
 

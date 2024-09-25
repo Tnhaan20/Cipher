@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react'
 import UserCard from '../../components/UserCard/UserCard';
-import FuncButton from '../../components/Button/FuncButton';
+import FuncButton from '../../components/Button/Button';
 
 export default function User() {
   interface Geo {

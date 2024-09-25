@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import PostCard from '../../components/PostCard/PostCard';
-import FuncButton from '../../components/Button/FuncButton';
+import FuncButton from '../../components/Button/Button';
 import Popup from '../../components/PopUp/Popup';
 
 interface Post {

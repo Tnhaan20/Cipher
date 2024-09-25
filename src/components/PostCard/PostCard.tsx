@@ -32,15 +32,15 @@ export default function PostCard({
   const [editedBody, setEditedBody] = useState(initialBody);
   const [popupMessage, setPopupMessage] = useState({ content: "", isShow: false });
 
+  
+  const handleLike = () => {
+    setLike(!like);
+  };
+  
   const toggleOptions = (e: React.MouseEvent) => {
     e.stopPropagation();
     setOptions(!options);
   };
-
-  const handleLike = () => {
-    setLike(!like);
-  };
-
   useEffect(() => {
     const closeOptions = () => setOptions(false);
     if (options) {
