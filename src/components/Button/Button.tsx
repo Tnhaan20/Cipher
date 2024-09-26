@@ -8,6 +8,7 @@ interface ButtonProps {
   type: buttonType;
   modalTitle: string;
   modalContent: React.ReactNode;
+  style: string
   onClick?: () => void;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
@@ -17,7 +18,8 @@ export default function FuncButton({
   name, 
   type, 
   modalTitle, 
-  modalContent, 
+  modalContent,
+  style, 
   onClick, 
   isOpen, 
   setIsOpen 
@@ -72,6 +74,7 @@ export default function FuncButton({
         isOpen={isOpen} 
         isClose={closeModal}
         title={modalTitle}
+        style={style}
       >
         {modalContent}
       </Modal>

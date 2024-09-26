@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PostCard from "../../components/PostCard/PostCard";
-import FuncButton from "../../components/Button/Button";
+import Button from "../../components/Button/Button";
 import Popup from "../../components/PopUp/Popup";
 
 export default function Posts() {
@@ -360,13 +360,14 @@ export default function Posts() {
     <div className="w-full pt-28">
       <div className="grid grid-cols-2 p-5">
         <div className="flex justify-start mr-72">
-          <FuncButton
+          <Button
             name="Create post"
             type="create"
             modalTitle="Create post"
             modalContent={createPostForm()}
             isOpen={isModalOpen}
             setIsOpen={setIsModalOpen}
+            style="max-w-2xl"
           />
         </div>
         <div className="flex justify-end">

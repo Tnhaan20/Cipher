@@ -5,19 +5,19 @@ interface Modal{
     isClose: () => void
     title: string
     children: ReactNode
-
+    style? : string
 }
 
-export default function Modal( {isOpen, isClose, title, children}: Modal) {
+export default function Modal({ isOpen, isClose, title, children, style = "" }: Modal) {
 
     if(!isOpen)
         return null
 
   return (
-    <div className="fixed bg inset-0 flex items-center justify-center z-50">
+    <div className="fixed  bg inset-0 flex items-center justify-center z-50">
       
-      <div className="modal relative max-w-md w-full">
-        <h2 className="text-3xl text-center font-bold">{title}</h2>
+        <div className={`modal relative shadow-xl ${style}`}>
+            <h2 className="text-3xl text-center font-bold">{title}</h2>
         <button
           onClick={isClose}
           className="absolute top-5 right-5 text-gray-500 hover:text-gray-700"

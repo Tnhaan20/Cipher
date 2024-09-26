@@ -338,7 +338,7 @@ export default function UserPost() {
       isShow={popupMessage.isShow}
       />
       <div className="grid grid-cols-2 p-5">
-        <div className="grid-cols-1 mr-36 ">
+        <div className="grid-cols-1 mr-36">
         <FuncButton
             name="Create post"
             type="create"
@@ -346,9 +346,10 @@ export default function UserPost() {
             modalContent={createPostForm()}
             isOpen={isModalOpen}
             setIsOpen={setIsModalOpen}
+            style="max-w-2xl"
           />
         </div>
-        <div className='grid-cols-1 ml-32'>
+        <div className='w-full flex justify-end'>
           <input
             type="text"
             className="search-input p-2 h-11 mt-2 mr-2 w-96"

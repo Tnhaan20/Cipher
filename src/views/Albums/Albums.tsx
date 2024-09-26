@@ -15,7 +15,6 @@ export default function Album() {
   const [allAlbums, setAllAlbums] = useState<Album[]>([]);
   const [searchInput, setSearchInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [popupMessage, setPopupMessage] = useState({content: "", isShow: false})
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newAlbum, setNewAlbum] = useState({ title: "", userId: "" });
@@ -39,10 +38,8 @@ export default function Album() {
       );
       setAlbums(response.data);
       setAllAlbums(response.data);
-      setError(null);
     } catch (error) {
       console.error("Error loading albums:", error);
-      setError("Failed to load albums. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -51,7 +48,6 @@ export default function Album() {
   const searchAlbum = () => {
     if (!searchInput.trim()) {
       setAlbums(allAlbums);
-      setError(null);
       return;
     }
 
@@ -59,11 +55,7 @@ export default function Album() {
       album.title.toLowerCase().includes(searchInput.toLowerCase())
     );
 
-    if (filteredAlbums.length === 0) {
-      setError("No albums found matching the search criteria.");
-    } else {
-      setError(null);
-    }
+    
 
     setAlbums(filteredAlbums);
   };
@@ -102,11 +94,11 @@ export default function Album() {
     validateForm();
   }
 
-  const createPost = async () => {
+  const createAlbum = async () => {
     if (!validateForm()) return;
     try {
       console.log('Creating post');
-      const res = await axios.post(`https://jsonplaceholder.typicode.com/posts`, {
+      const res = await axios.post(`https://jsonplaceholder.typicode.com/albums`, {
         title: newAlbum.title,
         userId: parseInt(newAlbum.userId)
       });
@@ -114,9 +106,9 @@ export default function Album() {
       setAllAlbums(prevPosts => [res.data, ...(prevPosts || [])]);
       setNewAlbum({ title: "", userId: "" });
       setTouched({ title: false, userId: false });
-      console.log("New post created:", { ...res.data });
+      console.log("New album created:", { ...res.data });
       setIsModalOpen(false);
-      setPopupMessage({ content: "Post created successfully!", isShow: true });
+      setPopupMessage({ content: "Album created successfully!", isShow: true });
       
       // Hide popup after 3 seconds
       setTimeout(() => {
@@ -124,7 +116,7 @@ export default function Album() {
       }, 3000);
     } catch (error) {
       console.log(error);
-      setPopupMessage({ content: "Error creating post. Please try again.", isShow: true });
+      setPopupMessage({ content: "Error creating album. Please try again.", isShow: true });
       
       // Hide error popup after 3 seconds
       setTimeout(() => {
@@ -168,7 +160,7 @@ export default function Album() {
           <div className="w-full flex items-end align-bottom mt-4">
             <button 
               className={`${!isFormValid ? 'button-false w-full justify-center' : 'button-search w-full justify-center'}`} 
-              onClick={createPost}
+              onClick={createAlbum}
               disabled={!isFormValid}
             >
               Submit
@@ -200,6 +192,7 @@ export default function Album() {
             modalContent={createAlbumForm()}
             isOpen={isModalOpen}
             setIsOpen={setIsModalOpen}
+            style="max-w-2xl"
           />
         </div>
         <div className="grid-cols-1 flex justify-end">
