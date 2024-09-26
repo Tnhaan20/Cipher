@@ -1,7 +1,7 @@
 import './App.css'
 import Posts from './views/Posts/Posts'
-
 export default function App(){
+  
   return(
     <div className='body'>
       {/* <h1 className='text-center max-w-4xl px-4'>
