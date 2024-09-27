@@ -98,7 +98,7 @@ export default function UserAlbum() {
   const createAlbum = async () => {
     if (!validateForm()) return;
     try {
-      console.log('Creating post');
+      console.log('Creating album');
       const res = await axios.post(`https://jsonplaceholder.typicode.com/albums`, {
         title: newAlbum.title,
         userId: id
