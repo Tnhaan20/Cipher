@@ -183,7 +183,6 @@ export default function Posts() {
     } catch (error) {
       console.log(error);
       setPopupMessage({ content: "Error creating post. Please try again.", isShow: true });
-      
       // Hide error popup after 3 seconds
       setTimeout(() => {
         setPopupMessage({ content: "", isShow: false });

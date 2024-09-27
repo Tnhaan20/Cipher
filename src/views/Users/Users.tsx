@@ -34,7 +34,6 @@ export default function User() {
     website: string;
     company: Company;
   }
-
   const [users, setUsers] = useState<User[]>([]);
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [searchInput, setSearchInput] = useState<string>("");
@@ -101,15 +100,16 @@ export default function User() {
   };
 
   const validateForm = () => {
-    const errors: Partial<Record<keyof User, string>> = {};
-    if (!newUser.name.trim()) errors.name = "Name is required";
-    if (!newUser.username.trim()) errors.username = "Username is required";
-    if (!newUser.email.trim()) errors.email = "Email is required";
-    if (!newUser.phone.trim()) errors.phone = "Phone is required";
-    // Add more validations as needed
-
+    const errors: { [key: string]: string } = {
+      name: newUser.name.trim() === "" ? "Name is required" : "",
+      username: newUser.username.trim() === "" ? "Username is required" : "",
+      email: newUser.email.trim() === "" ? "Email is required" : 
+             !/\S+@\S+\.\S+/.test(newUser.email) ? "Email is invalid" : "",
+      phone: newUser.phone.trim() === "" ? "Phone is required" : "",
+      website: newUser.website.trim() === "" ? "Website is required" : ""
+    };
     setFormErrors(errors);
-    const isValid = Object.keys(errors).length === 0;
+    const isValid = Object.values(errors).every(error => error === "");
     setIsFormValid(isValid);
     return isValid;
   };
@@ -121,19 +121,13 @@ export default function User() {
     validateForm();
   }
 
-  const handleNestedInputChange = (e: React.ChangeEvent<HTMLInputElement>, nestedField: 'address' | 'company') => {
-    const { name, value } = e.target;
-    setNewUser(prev => ({
-      ...prev,
-      [nestedField]: {
-        ...prev[nestedField],
-        [name]: value
-      }
-    }));
-    setTouched(prev => ({ ...prev, [`${nestedField}.${name}`]: true }));
+  const handleInputBlur = (e: any) => {
+    const { name } = e.target;
+    setTouched(prev => ({ ...prev, [name]: true }));
     validateForm();
   }
 
+  
   const createUser = async () => {
     if (!validateForm()) return;
     try {
@@ -163,16 +157,16 @@ export default function User() {
       setTouched({});
       console.log("New user created:", res.data);
       setIsModalOpen(false);
-      setPopupMessage({ content: "User created successfully!", isShow: true });
+      setPopupMessage({ content: "New user added to the system", isShow: true});
       setTimeout(() => {
         setPopupMessage({ content: "", isShow: false });
       }, 3000);
+
     } catch (error) {
       console.log(error);
-      setPopupMessage({ content: "Error creating user. Please try again.", isShow: true });
-      
+      setPopupMessage({ content: "Error creating user. Please try again.", isShow: true});
       setTimeout(() => {
-        setPopupMessage({ content: "", isShow: false });
+        setPopupMessage(prev => ({ ...prev, isShow: false }));
       }, 3000);
     }
   }
@@ -183,71 +177,82 @@ export default function User() {
         <h2 className="text-2xl font-bold mb-4">General Details</h2>
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Name*</label>
             <input 
-              className="w-full p-2 border rounded-md"
+              className={`w-full p-2 border rounded-md ${touched.name && formErrors.name ? 'border-red-500' : ''}`}
               name="name" 
               value={newUser.name} 
               onChange={handleInputChange}
+              onBlur={handleInputBlur}
               type="text" 
               placeholder="Name"
             />
+            {touched.name && formErrors.name && <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Username*</label>
             <input 
-              className="w-full p-2 border rounded-md"
+              className={`w-full p-2 border rounded-md ${touched.username && formErrors.username ? 'border-red-500' : ''}`}
               name="username" 
               value={newUser.username} 
               onChange={handleInputChange}
+              onBlur={handleInputBlur}
               type="text" 
               placeholder="Username"
             />
+            {touched.username && formErrors.username && <p className="text-red-500 text-sm mt-1">{formErrors.username}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email*</label>
             <input 
-              className="w-full p-2 border rounded-md"
+              className={`w-full p-2 border rounded-md ${touched.email && formErrors.email ? 'border-red-500' : ''}`}
               name="email" 
               value={newUser.email} 
               onChange={handleInputChange}
+              onBlur={handleInputBlur}
               type="email" 
               placeholder="Email"
             />
+            {touched.email && formErrors.email && <p className="text-red-500 text-sm mt-1">{formErrors.email}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Phone*</label>
             <input 
-              className="w-full p-2 border rounded-md"
-              name="phone" 
+              className={`w-full p-2 border rounded-md ${touched.phone && formErrors.phone ? 'border-red-500' : ''}`}
+              name="phone"
               value={newUser.phone} 
               onChange={handleInputChange}
+              onBlur={handleInputBlur}
               type="tel" 
               placeholder="Phone"
             />
+            {touched.phone && formErrors.phone && <p className="text-red-500 text-sm mt-1">{formErrors.phone}</p>}
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Website</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Website*</label>
             <input 
-              className="w-full p-2 border rounded-md"
+              className={`w-full p-2 border rounded-md ${touched.website && formErrors.website ? 'border-red-500' : ''}`}
               name="website" 
               value={newUser.website} 
               onChange={handleInputChange}
+              onBlur={handleInputBlur}
               type="text" 
               placeholder="Website"
             />
+            {touched.website && formErrors.website && <p className="text-red-500 text-sm mt-1">{formErrors.website}</p>}
           </div>
         </div>
   
         <h2 className="text-2xl font-bold mb-4">Address</h2>
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Street</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Street*</label>
             <input 
               className="w-full p-2 border rounded-md"
               name="street" 
               value={newUser.address.street} 
-              onChange={(e) => handleNestedInputChange(e, 'address')}
+              onChange={handleInputChange}
+              onBlur={handleInputBlur}
               type="text" 
               placeholder="Street"
             />
@@ -258,7 +263,6 @@ export default function User() {
               className="w-full p-2 border rounded-md"
               name="suite" 
               value={newUser.address.suite} 
-              onChange={(e) => handleNestedInputChange(e, 'address')}
               type="text" 
               placeholder="Suite"
             />
@@ -269,7 +273,6 @@ export default function User() {
               className="w-full p-2 border rounded-md"
               name="city" 
               value={newUser.address.city} 
-              onChange={(e) => handleNestedInputChange(e, 'address')}
               type="text" 
               placeholder="City"
             />
@@ -280,7 +283,6 @@ export default function User() {
               className="w-full p-2 border rounded-md"
               name="zipcode" 
               value={newUser.address.zipcode} 
-              onChange={(e) => handleNestedInputChange(e, 'address')}
               type="text" 
               placeholder="Zipcode"
             />
@@ -319,7 +321,6 @@ export default function User() {
               className="w-full p-2 border rounded-md"
               name="name" 
               value={newUser.company.name} 
-              onChange={(e) => handleNestedInputChange(e, 'company')}
               type="text" 
               placeholder="Company Name"
             />
@@ -330,7 +331,6 @@ export default function User() {
               className="w-full p-2 border rounded-md"
               name="catchPhrase" 
               value={newUser.company.catchPhrase} 
-              onChange={(e) => handleNestedInputChange(e, 'company')}
               type="text" 
               placeholder="Company Catch Phrase"
             />
@@ -341,7 +341,6 @@ export default function User() {
               className="w-full p-2 border rounded-md"
               name="bs" 
               value={newUser.company.bs} 
-              onChange={(e) => handleNestedInputChange(e, 'company')}
               type="text" 
               placeholder="Company BS"
             />
@@ -351,7 +350,7 @@ export default function User() {
         <div className="flex justify-end space-x-4">
           
           <button 
-            className={`px-4 py-2 rounded-md ${isFormValid ? 'button-post' : 'button-false'}`}
+            className={`${!isFormValid ? 'button-false w-full justify-center' : 'button-search w-full justify-center'}`} 
             onClick={createUser}
             disabled={!isFormValid}
           >
@@ -372,21 +371,20 @@ export default function User() {
 
   return (
     <div className="w-full pt-28 ">
-      <Popup
+    <Popup
       content={popupMessage.content}
       isShow={popupMessage.isShow}
     />
       <div className="grid grid-cols-2">
         <div className="mr-72">
-          <Button
-            name="Add new user"
+        <Button
+            name="Create user"
             type="create"
             modalTitle="Add new user"
             modalContent={createUserForm()}
             isOpen={isModalOpen}
             setIsOpen={setIsModalOpen}
             style="max-w-4xl"
-
           />
         </div>
         <div className="flex justify-end">
@@ -421,11 +419,6 @@ export default function User() {
         )}
       </div>
 
-      {popupMessage.isShow && (
-        <div className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded">
-          {popupMessage.content}
-        </div>
-      )}
     </div>
   )
 }
