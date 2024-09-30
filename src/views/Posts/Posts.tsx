@@ -356,7 +356,7 @@ export default function Posts() {
       content={popupMessage.content}
       isShow={popupMessage.isShow}
     />
-    <div className="w-full pt-28">
+    <div className="w-full">
       <div className="grid grid-cols-2 p-5">
         <div className="flex justify-start mr-72">
           <Button

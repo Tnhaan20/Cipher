@@ -62,7 +62,7 @@ export default function FuncButton({
   };
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center z-50">
       <button 
         onClick={handleClick} 
         className={`button-search flex items-center text-white px-4 py-2 rounded ${getButtonClass()}`}

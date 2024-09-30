@@ -1,40 +1,42 @@
-a {
-    text-decoration: none;
-}
-
-.header {
+.sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    padding: 20px 10%;
+    height: 100vh;
+    width: 250px;
     background-color: rgba(255, 255, 255, 0.074);
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(10px);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     z-index: 10;
+    
 }
 
-.navbar {
-    position: relative;
-    height: 100%;
+.sidebar-header {
+    padding: 20px;
+    text-align: center;
+}
+
+.sidebar-nav {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+    margin-top: 5rem;
 }
 
-.navbar a {
+.sidebar-nav a {
     position: relative;
     font-size: 20px;
     color: #808080;
     font-weight: 500;
-    margin-left: 20px;
+    margin-bottom: 20px;
     transition: color 0.3s;
-    padding-bottom: 5px; /* Add some padding to create space for the underline */
+    text-decoration: none;
+    padding: 10px 0;
 }
 
-.navbar a::before {
+.sidebar-nav a::before {
     content: '';
     position: absolute;
     bottom: 0;
@@ -45,17 +47,14 @@ a {
     transition: width 0.3s ease;
 }
 
-.navbar a:hover::before,
-.navbar a:focus::before {
+.sidebar-nav a:hover::before,
+.sidebar-nav a:focus::before,
+.sidebar-nav a.active-nav::before {
     width: 100%;
 }
 
-.navbar a.active-nav::before {
-    width: 100%;
-}
-
-.navbar a:hover,
-.navbar a:focus,
-.navbar a.active-nav {
+.sidebar-nav a:hover,
+.sidebar-nav a:focus,
+.sidebar-nav a.active-nav {
     color: #3ecf8e;
 }

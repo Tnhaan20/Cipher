@@ -370,7 +370,7 @@ export default function User() {
   }, [searchInput]);
 
   return (
-    <div className="w-full pt-28 ">
+    <div className="w-full">
     <Popup
       content={popupMessage.content}
       isShow={popupMessage.isShow}

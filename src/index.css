@@ -10,7 +10,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
+  height: 100%;
   /* Dark mode colors and gradient */
   background: #121212; /* Fallback for browsers that don't support gradients */
   background: linear-gradient(
@@ -28,6 +28,31 @@
   /* Animation */
   animation: move 4s linear infinite;
 }
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+  margin-left: 250px; /* Width of the sidebar */
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.content-wrapper {
+  width: 100%;
+}
+
+/* You might need to adjust your existing Sidebar styles to fit this new layout */
 
 @keyframes move {
   0% {

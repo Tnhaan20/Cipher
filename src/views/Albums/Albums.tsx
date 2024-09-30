@@ -178,13 +178,13 @@ export default function Album() {
   }, [searchInput]);
 
   return (
-    <div className="w-full text-white pt-28 px-4 min-h-screen">
+    <div className="w-full">
       <Popup
       content={popupMessage.content}
       isShow={popupMessage.isShow}
       />
       <div className="w-full grid grid-cols-2 p-5">
-        <div className="mr-72 grid-cols-1">
+        <div className="grid-cols-1">
           <FuncButton
             name="Create album"
             type="create"
@@ -195,7 +195,7 @@ export default function Album() {
             style="max-w-2xl"
           />
         </div>
-        <div className="grid-cols-1 flex justify-end">
+        <div className="grid-cols-1">
           <input
             type="text"
             className="search-input p-2 h-11 mt-2 mr-2 w-96"
