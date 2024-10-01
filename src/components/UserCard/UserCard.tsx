@@ -1,4 +1,3 @@
-import React, { Component } from 'react'
 import './UserCard.css'
 import { Link } from 'react-router-dom'
 
@@ -9,12 +8,10 @@ interface UserCard{
     phone: string;
 }
 
-
-
 export default function UserCard({id, name, email, phone}: UserCard) {
     return (
-      <div className="w-full">
-      <div className="user-card mx-5 h-full">
+      <div className="w-full h-full">
+      <div className="user-card h-full flex flex-col">
         <div className="flex-grow">
           <p>User's ID: {id}</p>
           <p>Name: {name}</p>

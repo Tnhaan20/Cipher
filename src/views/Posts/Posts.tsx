@@ -372,6 +372,31 @@ export default function Posts() {
       content={popupMessage.content}
       isShow={popupMessage.isShow}
     />
+    <div className="fixed w-[30%] top-[0.65rem] left-48 z-50">
+        <input
+          type="text"
+          className="w-[70%] p-2 pl-10 rounded-xl"
+          placeholder="Search"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          className="absolute left-3 top-1/2 transform -translate-y-1/2"
+        >
+          <path
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="M10.783 18.828a8.05 8.05 0 0 0 7.439-4.955a8.03 8.03 0 0 0-1.737-8.765a8.045 8.045 0 0 0-13.735 5.68c0 2.131.846 4.174 2.352 5.681a8.05 8.05 0 0 0 5.68 2.359m5.706-2.337l4.762 4.759"
+          />
+        </svg>
+    </div>
     <div className="fixed top-0 right-40 z-50">
       <Button
         name="Create post"
@@ -383,19 +408,10 @@ export default function Posts() {
         style="max-w-2xl"
       />
     </div>
-    <div className="fixed w-[30%] top-[0.65rem] left-48 z-50">
-        <input
-          type="text"
-          className="p-2 rounded-xl"
-          placeholder="Search"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-    </div>
     <div className="w-full">
         <div className="relative">
           <img 
-            className="w-full h-80 object-cover blur-sm filter" 
+            className="w-full h-96 object-cover blur-sm filter" 
             src="https://www.postplanner.com/hubfs/types-of-social-media-content.png" 
             alt="Blurred social media banner" 
           />

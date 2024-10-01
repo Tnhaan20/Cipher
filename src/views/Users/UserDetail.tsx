@@ -353,7 +353,7 @@ export default function UserDetail() {
   );
 
   return (
-    <div className="w-full text-white pt-20 px-4 min-h-screen">
+    <div className="w-full">
 
       <Popup
         content={popupMessage.content}

@@ -28,6 +28,7 @@ export default function AlbumPhotos() {
   const [newPhoto, setNewPhoto] = useState({title: ""});
   const [fileID, setFileID] = useState("")
   const [url, setUrl] = useState("")
+
   const loadPhotos = async () => {
     try {
       setLoading(true);
@@ -193,12 +194,16 @@ export default function AlbumPhotos() {
   };
 
   return (
-    <div className="w-full text-white pt-28 px-4 min-h-screen">
-      <div className="w-full flex justify-center p-5">
-        <h1 className="text-3xl font-bold">Album {id}</h1>
+    <div className="w-full">
+      <div className="fixed top-0 right-40 z-50">
         <button className='button-search' onClick={open}>
-          Upload photo
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-linejoin="round" d="M21.25 13V8.5a5 5 0 0 0-5-5h-8.5a5 5 0 0 0-5 5v7a5 5 0 0 0 5 5h6.26"/><path stroke-linejoin="round" d="m3.01 17l2.74-3.2a2.2 2.2 0 0 1 2.77-.27a2.2 2.2 0 0 0 2.77-.27l2.33-2.33a4 4 0 0 1 5.16-.43l2.47 1.91M8.01 10.17a1.66 1.66 0 1 0-.02-3.32a1.66 1.66 0 0 0 .02 3.32"/><path stroke-miterlimit="10" d="M18.707 15v5"/><path stroke-linejoin="round" d="m21 17.105l-1.967-1.967a.46.46 0 0 0-.652 0l-1.967 1.967"/></g></svg>
+        <span className='ml-3'>Upload photo</span>
         </button>
+      </div>
+      
+      <div className="fixed top-4 left-72 z-50">
+        <h1 className="text-xl font-bold">{photos.length} photos of album {id}</h1>
       </div>
 
       {error && <p className="text-red-500 text-center my-4">{error}</p>}
@@ -206,7 +211,7 @@ export default function AlbumPhotos() {
       {loading ? (
         <p className="text-center">Loading photos...</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 px-5 py-5">
           {photos.map((photo, index) => (
             <div key={photo.id} className="photo-card cursor-pointer" onClick={() => openModal(index)}>
               <img

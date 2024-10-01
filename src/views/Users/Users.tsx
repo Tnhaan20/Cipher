@@ -370,14 +370,13 @@ export default function User() {
   }, [searchInput]);
 
   return (
-    <div className="w-full">
+    <div className="w-full mt-5">
     <Popup
       content={popupMessage.content}
       isShow={popupMessage.isShow}
     />
-      <div className="grid grid-cols-2">
-        <div className="mr-72">
-        <Button
+    <div className="fixed top-0 right-40 z-50">
+          <Button
             name="Create user"
             type="create"
             modalTitle="Add new user"
@@ -387,25 +386,40 @@ export default function User() {
             style="max-w-4xl"
           />
         </div>
-        <div className="flex justify-end">
-          <input
-            type="text"
-            className="search-input p-2 h-11 mt-2 mr-2 w-80"
-            placeholder="Search Users by name"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+        <div className="fixed w-[30%] top-[0.65rem] left-48 z-50">
+        <input
+          type="text"
+          className="w-[70%] p-2 pl-10 rounded-xl"
+          placeholder="Search"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          className="absolute left-3 top-1/2 transform -translate-y-1/2"
+        >
+          <path
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="M10.783 18.828a8.05 8.05 0 0 0 7.439-4.955a8.03 8.03 0 0 0-1.737-8.765a8.045 8.045 0 0 0-13.735 5.68c0 2.131.846 4.174 2.352 5.681a8.05 8.05 0 0 0 5.68 2.359m5.706-2.337l4.762 4.759"
           />
-        </div>
-      </div>
+        </svg>
+    </div>
 
       {error && <p className="text-red-500 text-center my-4">{error}</p>}
 
-      <div className="grid grid-cols-2 mx-5 pr-5 gap-1">
+      <div className="w-full grid grid-cols-2 gap-3">
         {loading ? (
           <p className="col-span-full text-center">Loading users...</p>
         ) : users.length > 0 ? (
           users.map((user) => (
-            <div key={user.id} className="p-1">
+            <div key={user.id} className="">
               <UserCard
                 id={user.id}
                 name={user.name}

@@ -196,8 +196,7 @@ export default function Album() {
       content={popupMessage.content}
       isShow={popupMessage.isShow}
       />
-      <div className="w-full grid grid-cols-2 p-5">
-        <div className="grid-cols-1">
+    <div className="fixed top-0 right-40 z-50">
           <FuncButton
             name="Create album"
             type="create"
@@ -208,16 +207,31 @@ export default function Album() {
             style="max-w-2xl"
           />
         </div>
-        <div className="grid-cols-1">
-          <input
-            type="text"
-            className="search-input p-2 h-11 mt-2 mr-2 w-96"
-            placeholder="Search albums by title"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+        <div className="fixed w-[30%] top-[0.65rem] left-48 z-50">
+        <input
+          type="text"
+          className="w-[70%] p-2 pl-10 rounded-xl"
+          placeholder="Search"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          className="absolute left-3 top-1/2 transform -translate-y-1/2"
+        >
+          <path
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="1.5"
+            d="M10.783 18.828a8.05 8.05 0 0 0 7.439-4.955a8.03 8.03 0 0 0-1.737-8.765a8.045 8.045 0 0 0-13.735 5.68c0 2.131.846 4.174 2.352 5.681a8.05 8.05 0 0 0 5.68 2.359m5.706-2.337l4.762 4.759"
           />
-        </div>
-      </div>
+        </svg>
+    </div>
 
       <div className="w-full grid grid-cols-2 gap-3 p-5">
       {loading ? (
