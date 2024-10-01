@@ -10,6 +10,11 @@ interface Album {
   title: string;
 }
 
+interface User {
+  userId: number;
+  name: string;
+}
+
 export default function Album() {
   const [albums, setAlbums] = useState<Album[]>([]);
   const [allAlbums, setAllAlbums] = useState<Album[]>([]);
@@ -21,7 +26,7 @@ export default function Album() {
   const [formErrors, setFormErrors] = useState({ title: "", userId: "" });
   const [isFormValid, setIsFormValid] = useState(false);
   const [touched, setTouched] = useState({ title: false, userId: false });
-  const [validUserIds, setValidUserIds] = useState<number[]>([]);
+  const [users, setUsers] = useState<{ [key: number]: User }>({});
 
 
   useEffect(() => {
@@ -62,18 +67,18 @@ export default function Album() {
 
   const loadUserID = async () => {
     try {
-      const res = await axios.get(`https://jsonplaceholder.typicode.com/users`)
-      const UID = res.data.map((users: any) => users.id)
-      setValidUserIds(UID)
-      } catch (error) {
+      const res = await axios.get(`https://jsonplaceholder.typicode.com/users`);
+      const userList = res.data.map((user: any) => ({ userId: user.id, name: user.name }));
+      setUsers(userList.reduce((map: any, user: any) => ({ ...map, [user.userId]: user }), {}));
+    } catch (error) {
+      console.log('Error loading users', error);
     }
-  }
+  };
 
   const validateForm = () => {
     const errors = {
       title: newAlbum.title.trim() === "" ? "Title is required" : "",
-      userId: newAlbum.userId.trim() === "" ? "User ID is required" : 
-              !validUserIds.includes(parseInt(newAlbum.userId)) ? "Invalid User ID" : ""
+      userId: newAlbum.userId.trim() === "" ? "User ID is required" : ""
     };
     setFormErrors(errors);
     const isValid = Object.values(errors).every(error => error === "");
@@ -145,17 +150,25 @@ export default function Album() {
           </div>
           
           <div className="w-full">
-            <span>User ID</span>
-            <input
+            <span>User</span>
+            <select
+              title="UID"
               className={`p-3 w-full mb-1 ${touched.userId && formErrors.userId ? 'border-red-500' : ''}`}
-              type="number"
               name="userId"
-              placeholder="User ID"
               value={newAlbum.userId}
               onChange={handleInputChange}
               onBlur={handleInputBlur}
-            />
-            {touched.userId && formErrors.userId && <p className="text-red-500 text-sm mb-2">{formErrors.userId}</p>}
+            >
+              <option value="">Select User</option>
+              {Object.values(users).map((user: User) => (
+                <option key={user.userId} value={user.userId}>
+                  {user.name} - ID: {user.userId}
+                </option>
+              ))}
+            </select>
+            {touched.userId && formErrors.userId && (
+              <p className="text-red-500 text-sm mb-2">{formErrors.userId}</p>
+            )}
           </div>
           <div className="w-full flex items-end align-bottom mt-4">
             <button 

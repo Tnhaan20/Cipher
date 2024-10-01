@@ -35,7 +35,6 @@ export default function Posts() {
   const [formErrors, setFormErrors] = useState({ title: "", body: "", userId: "" });
   const [isFormValid, setIsFormValid] = useState(false);
   const [touched, setTouched] = useState({ title: false, body: false, userId: false });
-  const [validUserIds, setValidUserIds] = useState<number[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newComment, setNewComment] = useState({ name: "", email: "", body: "" });
   const [commentFormErrors, setCommentFormErrors] = useState({ name: "", email: "", body: "" });
@@ -57,12 +56,14 @@ export default function Posts() {
 
   const loadUserID = async () => {
     try {
-      const res = await axios.get(`https://jsonplaceholder.typicode.com/users`)
-      const UID = res.data.map((users: any) => users.id)
-      setValidUserIds(UID)
-      } catch (error) {
+      const res = await axios.get(`https://jsonplaceholder.typicode.com/users`);
+      const userList = res.data.map((user: any) => ({ userId: user.id, name: user.name }));
+      setUsers(userList.reduce((map: any, user: any) => ({ ...map, [user.userId]: user }), {}));
+    } catch (error) {
+      console.log('Error loading users', error);
     }
-  }
+  };
+  
 
   const loadPosts = async () => {
     try {
@@ -137,8 +138,7 @@ export default function Posts() {
     const errors = {
       title: newPost.title.trim() === "" ? "Title is required" : "",
       body: newPost.body.trim() === "" ? "Body is required" : "",
-      userId: newPost.userId.trim() === "" ? "User ID is required" : 
-              !validUserIds.includes(parseInt(newPost.userId)) ? "Invalid User ID" : ""
+      userId: newPost.userId.trim() === "" ? "User ID is required" : ""
     };
     setFormErrors(errors);
     const isValid = Object.values(errors).every(error => error === "");
@@ -195,58 +195,74 @@ export default function Posts() {
     return (
       <div className="w-full h-full">
         <div className="flex flex-col p-5">
-          <div className="w-full"> 
+          <div className="w-full">
             <span>Title</span>
-            <input 
-              className={`p-3 w-full mb-1 ${touched.title && formErrors.title ? 'border-red-500' : ''}`} 
-              name="title" 
-              value={newPost.title} 
+            <input
+              className={`p-3 w-full mb-1 ${touched.title && formErrors.title ? 'border-red-500' : ''}`}
+              name="title"
+              value={newPost.title}
               onChange={handleInputChange}
               onBlur={handleInputBlur}
-              type="text" 
+              type="text"
               placeholder="Title"
             />
-            {touched.title && formErrors.title && <p className="text-red-500 text-sm mb-2">{formErrors.title}</p>}
+            {touched.title && formErrors.title && (
+              <p className="text-red-500 text-sm mb-2">{formErrors.title}</p>
+            )}
           </div>
-          <div className="w-full"> 
+  
+          <div className="w-full">
             <span>Body</span>
-            <textarea 
-              className={`p-3 w-full mb-1 ${touched.body && formErrors.body ? 'border-red-500' : ''}`} 
-              name="body" 
-              value={newPost.body} 
+            <textarea
+              className={`p-3 w-full mb-1 ${touched.body && formErrors.body ? 'border-red-500' : ''}`}
+              name="body"
+              value={newPost.body}
               onChange={handleInputChange}
               onBlur={handleInputBlur}
               placeholder="Body"
             />
-            {touched.body && formErrors.body && <p className="text-red-500 text-sm mb-2">{formErrors.body}</p>}
+            {touched.body && formErrors.body && (
+              <p className="text-red-500 text-sm mb-2">{formErrors.body}</p>
+            )}
           </div>
           <div className="w-full">
-            <span>User ID</span>
-            <input
+            <span>User</span>
+            <select
+              title="UID"
               className={`p-3 w-full mb-1 ${touched.userId && formErrors.userId ? 'border-red-500' : ''}`}
-              type="number"
               name="userId"
-              placeholder="User ID"
               value={newPost.userId}
               onChange={handleInputChange}
               onBlur={handleInputBlur}
-            />
-            {touched.userId && formErrors.userId && <p className="text-red-500 text-sm mb-2">{formErrors.userId}</p>}
+            >
+              <option value="">Select User</option>
+              {Object.values(users).map((user: User) => (
+                <option key={user.userId} value={user.userId}>
+                  {user.name} - ID: {user.userId}
+                </option>
+              ))}
+            </select>
+            {touched.userId && formErrors.userId && (
+              <p className="text-red-500 text-sm mb-2">{formErrors.userId}</p>
+            )}
           </div>
+  
           <div className="w-full flex items-end align-bottom mt-4">
-            <button 
-              className={`${!isFormValid ? 'button-false w-full justify-center' : 'button-search w-full justify-center'}`} 
+            <button
+              className={`${
+                !isFormValid ? 'button-false w-full justify-center' : 'button-search w-full justify-center'
+              }`}
               onClick={createPost}
               disabled={!isFormValid}
             >
               Submit
             </button>
-            
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
+  
 
   const validateCommentForm = () => {
     const errors = {
