@@ -372,29 +372,38 @@ export default function Posts() {
       content={popupMessage.content}
       isShow={popupMessage.isShow}
     />
+    <div className="fixed top-0 right-40 z-50">
+      <Button
+        name="Create post"
+        type="create"
+        modalTitle="Create post"
+        modalContent={createPostForm()}
+        isOpen={isModalOpen}
+        setIsOpen={setIsModalOpen}
+        style="max-w-2xl"
+      />
+    </div>
+    <div className="fixed w-[30%] top-[0.65rem] left-48 z-50">
+        <input
+          type="text"
+          className="p-2 rounded-xl"
+          placeholder="Search"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+    </div>
     <div className="w-full">
-      <div className="grid grid-cols-2 p-5">
-        <div className="flex justify-start mr-72">
-          <Button
-            name="Create post"
-            type="create"
-            modalTitle="Create post"
-            modalContent={createPostForm()}
-            isOpen={isModalOpen}
-            setIsOpen={setIsModalOpen}
-            style="max-w-2xl"
+        <div className="relative">
+          <img 
+            className="w-full h-80 object-cover blur-sm filter" 
+            src="https://www.postplanner.com/hubfs/types-of-social-media-content.png" 
+            alt="Blurred social media banner" 
           />
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <h1 className="text-4xl font-bold text-[#9ce036] mb-4">Post</h1>
+            <p className="text-xl text-[#5629a9] mb-5">Discover and share amazing posts</p>
+          </div>
         </div>
-        <div className="flex justify-end">
-          <input
-            type="text"
-            className="search-input p-2 h-11 mt-2 mr-2 w-96"
-            placeholder="Search posts by title or content"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-          />
-        </div>
-      </div>
 
       {loading ? (
         <p className="text-center my-4">Loading posts...</p>
