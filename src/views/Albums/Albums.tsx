@@ -208,7 +208,7 @@ export default function Album() {
             style="max-w-2xl"
           />
         </div>
-        <div className="fixed w-[30%] top-[0.65rem] left-48 z-50">
+        <div className="fixed w-[30%] top-[0.65rem] left-48 z-30">
         <input
           type="text"
           className="w-[70%] p-2 pl-10 rounded-xl"
