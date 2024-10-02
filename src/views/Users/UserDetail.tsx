@@ -362,15 +362,7 @@ export default function UserDetail() {
       {error && <p className="text-red-500 text-center my-4">{error}</p>}
 
       {loading ? (
-        <div className="pt-10 text-center">
-          <section className="dots-container">
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
-          </section>
-        </div>
+        <div className="line-wobble mt-10"></div>
       ) : user ? (
         <div className="w-full flex justify-center p-4 pt-10 rounded-lg">
           <div className='px-10'>

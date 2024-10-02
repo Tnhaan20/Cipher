@@ -88,7 +88,7 @@ export default function TaskCard({ userId, id, title: initTitle, completed }: Ta
     <>
       <Popup content={popupMessage.content} isShow={popupMessage.isShow} />
       <div 
-        className="w-full bg text-white p-3 rounded-lg mb-2 cursor-pointer"
+        className="w-full bg p-3 mb-2 cursor-pointer"
         onClick={() => setIsModalOpen(true)}
       >
         <div className="flex items-center space-x-2">
@@ -100,7 +100,7 @@ export default function TaskCard({ userId, id, title: initTitle, completed }: Ta
             className="form-checkbox h-5 w-5"
             onClick={(e) => e.stopPropagation()}
           />
-          <span className={`text-sm font-medium ${isCompleted ? 'line-through text-gray-400' : ''}`}>
+          <span className={`text-sm font-medium ${isCompleted ? 'line-through ' : ''}`}>
             {currentTitle}
           </span>
         </div>
@@ -124,13 +124,13 @@ export default function TaskCard({ userId, id, title: initTitle, completed }: Ta
                 value={editedTitle}
                 onChange={(e) => setEditedTitle(e.target.value)}
                 onBlur={handleEdit}
-                className="w-full bg-transparent text-white text-lg font-semibold focus:outline-none"
+                className="w-full bg-transparent text-lg font-semibold focus:outline-none"
               />
             </div>
             <div className="flex justify-end items-center mt-4">
               <button
                 onClick={handleDelete}
-                className="text-red-500 mr-5 hover:text-red-600"
+                className="bg-red-500 hover:bg-red-600 text-white mt-3 px-4 py-2 mr-2 rounded-sm"
               >
                 Delete task
               </button>

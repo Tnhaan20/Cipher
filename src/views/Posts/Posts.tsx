@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import PostCard from "../../components/PostCard/PostCard";
 import Button from "../../components/Button/Button";
 import Popup from "../../components/PopUp/Popup";
+import bg from "../../assets/post-bg.jpg"
 
 export default function Posts() {
   interface Post {
@@ -264,108 +265,6 @@ export default function Posts() {
   };
   
 
-  const validateCommentForm = () => {
-    const errors = {
-      name: newComment.name.trim() === "" ? "Name is required" : "",
-      email: newComment.email.trim() === "" ? "Email is required" : 
-             !/\S+@\S+\.\S+/.test(newComment.email) ? "Invalid email format" : "",
-      body: newComment.body.trim() === "" ? "Comment body is required" : ""
-    };
-    setCommentFormErrors(errors);
-    const isValid = Object.values(errors).every(error => error === "");
-    setIsCommentFormValid(isValid);
-    return isValid;
-  };
-
-  const handleCommentInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setNewComment(prev => ({ ...prev, [name]: value }));
-    setCommentFormTouched(prev => ({ ...prev, [name]: true }));
-    validateCommentForm();
-  }
-
-  const handleCommentInputBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name } = e.target;
-    setCommentFormTouched(prev => ({ ...prev, [name]: true }));
-    validateCommentForm();
-  }
-
-  //Submit comment
-  const submitComment = async (postId: number) => {
-    if (!validateCommentForm()) return;
-    try {
-      const response = await axios.post(`https://jsonplaceholder.typicode.com/comments`, {
-        postId,
-        ...newComment
-      });
-      setComments(prev => ({
-        ...prev,
-        [postId]: [...(prev[postId] || []), response.data]
-      }));
-      setNewComment({ name: "", email: "", body: "" });
-      setCommentFormTouched({ name: false, email: false, body: false });
-      setActiveCommentPostId(null);
-    } catch (error) {
-      console.error("Error submitting comment:", error);
-    }
-  }
-
-  //Comment Add
-  const commentForm = (postId: number) => {
-    return (
-      <div className="w-full p-4 bg rounded-lg">
-        <h3 className="text-lg font-semibold mb-2">Add a Comment</h3>
-        <div className="mb-2">
-          <span>Name</span>
-          <input
-            className={`p-2 w-full ${commentFormTouched.name && commentFormErrors.name ? 'border-red-500' : ''}`}
-            name="name"
-            value={newComment.name}
-            onChange={handleCommentInputChange}
-            onBlur={handleCommentInputBlur}
-            type="text"
-            placeholder="Name"
-          />
-          {commentFormTouched.name && commentFormErrors.name && <p className="text-red-500 text-sm">{commentFormErrors.name}</p>}
-        </div>
-        <div className="mb-2">
-          <span>Email</span>
-          <input
-            className={`p-2 w-full ${commentFormTouched.email && commentFormErrors.email ? 'border-red-500' : ''}`}
-            name="email"
-            value={newComment.email}
-            onChange={handleCommentInputChange}
-            onBlur={handleCommentInputBlur}
-            type="email"
-            placeholder="Email"
-          />
-          {commentFormTouched.email && commentFormErrors.email && <p className="text-red-500 text-sm">{commentFormErrors.email}</p>}
-        </div>
-        <div className="mb-2">
-          <span>Comment Content</span>
-          <textarea
-            className={`p-2 w-full ${commentFormTouched.body && commentFormErrors.body ? 'border-red-500' : ''}`}
-            name="body"
-            value={newComment.body}
-            onChange={handleCommentInputChange}
-            onBlur={handleCommentInputBlur}
-            placeholder="Comment"
-          />
-          {commentFormTouched.body && commentFormErrors.body && <p className="text-red-500 text-sm">{commentFormErrors.body}</p>}
-        </div>
-        <button
-          className={`w-full p-2 ${!isCommentFormValid ? 'button-false justify-center' : 'button-search justify-center'}`}
-          onClick={() => submitComment(postId)}
-          disabled={!isCommentFormValid}
-        >
-          Submit Comment
-        </button>
-      </div>
-    )
-  }
-
-  //Comment Add
-
   return (
     <>
     <Popup
@@ -409,28 +308,27 @@ export default function Posts() {
       />
     </div>
     <div className="w-full">
-        <div className="relative">
+        <div className="">
           <img 
-            className="w-full h-96 object-cover blur-sm filter" 
-            src="https://www.postplanner.com/hubfs/types-of-social-media-content.png" 
+            className="w-full h-96 object-cover absolute top-14 left-0" 
+            src={bg} 
             alt="Blurred social media banner" 
           />
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <h1 className="text-4xl font-bold text-[#9ce036] mb-4">Post</h1>
-            <p className="text-xl text-[#5629a9] mb-5">Discover and share amazing posts</p>
+          <div className="relative top-20 mt-5 text-center">
+            <p className="text-4xl">POST</p>
+            <p className="text-2xl mt-4">- allows users to preview key content and interact with options like viewing details, sharing, or performing actions -</p>
           </div>
         </div>
-
       {loading ? (
         <p className="text-center my-4">Loading posts...</p>
       ) : error ? (
         <p className="text-red-500 text-center my-4">{error}</p>
       ) : posts && posts.length > 0 ? (
-        <div className="w-full flex flex-col items-center">
-          {posts.map((post) => {
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 pb-4 pt-56 px-4">
+            {posts.map((post) => {
             loadUser(post.userId);
             return (
-              <div key={post.id} className="w-[70%] bg-[#171717] rounded-lg overflow-hidden mb-4">
+              <div key={post.id} className="rounded-lg overflow-hidden">
                 <PostCard
                   userId={post.userId}
                   id={post.id}
@@ -440,28 +338,6 @@ export default function Posts() {
                   showComments={visibleComments[post.id] || false}
                   name={users[post.userId]?.name || "Loading..."}
                 />
-                {visibleComments[post.id] && comments[post.id] && (
-                  <div className="mt-4 ml-4">
-                    <button
-                      className="w-full button-cmt rounded-3xl mb-4"
-                      onClick={() => setActiveCommentPostId(activeCommentPostId === post.id ? null : post.id)}
-                    >
-                      {activeCommentPostId === post.id ? "Cancel" : "Make a comment"}
-                    </button>
-                    {activeCommentPostId === post.id && commentForm(post.id)}
-                    <h3 className="text-lg font-semibold">
-                      Comments of post {post.id}:
-                    </h3>
-                    {comments[post.id].map((comment) => (
-                      <div key={comment.id} className="mt-2 p-2">
-                        <p className="text-xl">
-                          <strong>{comment.name}</strong> ({comment.email})
-                        </p>
-                        <p>{comment.body}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
             );
           })}

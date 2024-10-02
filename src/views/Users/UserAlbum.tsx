@@ -173,7 +173,7 @@ export default function UserAlbum() {
   
 
   return (
-    <div className="w-full text-white">
+    <div className="w-full">
       <Popup
       content={popupMessage.content}
       isShow={popupMessage.isShow}

@@ -129,15 +129,14 @@ export default function AlbumCard({ userId, id, title: initTitle }: AlbumProps) 
 
   const optionsMenu = () => {
     return (
-      <div className="bg-[#242526] options-menu p-2 right-5 mt-2 rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()}>
-        <div className="arrow-up"></div>
-        <button className="options-item" onClick={() => setIsEditModalOpen(true)}>
+      <div className="bg options-menu p-2 right-5 rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()}>
+        <button className="w-full text-left px-4 py-2 text-sm flex items-center hover:bg-[#b4b4b4] hover:text-[#16a34a]" onClick={() => setIsEditModalOpen(true)}>
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 2048 2048"><path fill="currentColor" d="M384 1920h412l-32 128H256V128h128V0h128v128h256V0h128v128h256V0h128v128h256V0h128v128h128v648q-34 5-66 17t-62 31V256H384zM1848 896q42 0 78 15t64 41t42 63t16 79q0 39-15 76t-43 65l-717 717l-377 94l94-377l717-716q29-29 65-43t76-14m51 249q21-21 21-51q0-31-20-50t-52-20q-14 0-27 4t-23 15l-692 692l-34 135l135-34z"/></svg>
           <span className="ml-3">
             Edit album
           </span>
         </button>
-        <button className="options-item" onClick={() => setIsDeleteModalOpen(true)}>
+        <button className="w-full flex items-center text-left px-4 py-2 text-sm hover:bg-[#b4b4b4] hover:text-[#ff4e4e]" onClick={() => setIsDeleteModalOpen(true)}>
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 1024 1024"><path fill="currentColor" d="M360 184h-8c4.4 0 8-3.6 8-8zh304v-8c0 4.4 3.6 8 8 8h-8v72h72v-80c0-35.3-28.7-64-64-64H352c-35.3 0-64 28.7-64 64v80h72zm504 72H160c-17.7 0-32 14.3-32 32v32c0 4.4 3.6 8 8 8h60.4l24.7 523c1.6 34.1 29.8 61 63.9 61h454c34.2 0 62.3-26.8 63.9-61l24.7-523H888c4.4 0 8-3.6 8-8v-32c0-17.7-14.3-32-32-32M731.3 840H292.7l-24.2-512h487z"/></svg>
           <span className="ml-3">
             Delete album
@@ -157,9 +156,7 @@ export default function AlbumCard({ userId, id, title: initTitle }: AlbumProps) 
       <div className="mb-5 flex justify-between items-center">
         <div className="flex items-center">
           <div className="flex-grow p-2">
-            <p className="mb-2">ID: {id}</p>
-            <p className="mb-2 font-semibold">Album's Title: {currentTitle}</p>
-            <p className="hidden mt-auto">albumed by user: {userId}</p>
+            <p className="mb-2 font-semibold">{currentTitle}</p>
           </div>
         </div>
         <div className="fixed top-5 right-5">

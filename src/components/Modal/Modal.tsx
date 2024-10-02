@@ -14,7 +14,7 @@ export default function Modal({ isOpen, isClose, title, children, style = "" }: 
         return null
 
   return (
-    <div className="fixed  bg inset-0 flex items-center justify-center z-50">
+    <div className="fixed bg inset-0 flex items-center justify-center z-50">
         <div className={`modal relative shadow-xl ${style}`}>
             <h2 className="text-3xl text-center font-bold">{title}</h2>
         <button

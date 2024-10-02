@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import AlbumCard from "../../components/AlbumCard/AlbumCard";
 import FuncButton from "../../components/Button/Button";
 import Popup from "../../components/PopUp/Popup";
+import bg from "../../assets/album-bg.jpg"
 
 interface Album {
   userId: number;
@@ -232,10 +233,24 @@ export default function Album() {
           />
         </svg>
     </div>
+    <div className="">
+          <img 
+            className="w-full h-[28.5rem] object-cover absolute top-14 left-0" 
+            src={bg} 
+            alt="Blurred social media banner" 
+          />
+          <div className="relative top-20 left-14 mt-5 text-center">
+            <p className="text-2xl ml-5 text-[#1c1b22de]">The album</p>
+          </div>
+          <div className="relative left-[26rem] bottom-[27rem]">
+            <p className="text-sm text-[#1c1b22de] transform -rotate-90">Every photo tells a story,</p>
+            <p className="text-sm text-[#1c1b22de] transform -rotate-90 ml-10">and every album holds a lifetime of memories.</p>
+          </div>
+        </div>
 
-      <div className="w-full grid grid-cols-2 gap-3 p-5">
+        <div className="w-full grid grid-cols-2 gap-3 pb-4 pt-80 px-4">
       {loading ? (
-          <p className="col-span-full text-center">Loading albums...</p>
+        <div className="w-full line-wobble mt-10"></div>
         ) : albums.length > 0 ? (
           albums.map((album) => (
             <AlbumCard

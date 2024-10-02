@@ -11,6 +11,7 @@ import UserDetail from './views/Users/UserDetail.tsx'
 import UserPost from './views/Users/UserPost.tsx'
 import UserTask from './views/Users/UserTask.tsx'
 import UserAlbum from './views/Users/UserAlbum.tsx'
+import PostDetail from './views/Posts/PostDetail.tsx'
 
 // Layout component to wrap the sidebar and main content
 const Layout = () => (
@@ -30,6 +31,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route element={<Layout />}>
           <Route path='/' element={<App/>} />
+          <Route path='/posts/:id' element={<PostDetail/>} />
           <Route path='/albums' element={<Album/>} />
           <Route path='/users' element={<User/>} />
           <Route path='/albums/:id/photos' element={<Photos/>} />

@@ -366,11 +366,11 @@ export default function UserPost() {
       ) : error ? (
         <p className="text-red-500 text-center my-4">{error}</p>
       ) : posts && posts.length > 0 ? (
-        <div className="w-full flex flex-col items-center">
+        <div className="w-full grid grid-cols-3 gap-3 px-2 items-center">
           {posts.map((post) => {
             loadUser(post.userId);
             return (
-              <div key={post.id} className="w-[70%] bg-[#171717] rounded-lg overflow-hidden mb-4">
+              <div key={post.id} className="rounded-lg overflow-hidden mb-4">
                 <PostCard
                   userId={post.userId}
                   id={post.id}

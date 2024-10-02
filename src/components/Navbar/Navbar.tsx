@@ -35,7 +35,7 @@ export default function Navbar() {
                         </nav>
                     </div>
                     <div className="flex items-center justify-end col-span-1">
-                        <button>
+                        <button className=''>
                             <span>What's this?</span>
                         </button>
                     </div>

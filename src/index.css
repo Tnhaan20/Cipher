@@ -3,30 +3,17 @@
 @tailwind utilities;
 
 :root {
-  font-family: 'Pragmata Pro', monospace;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #121212;
+  font-family: 'JetBrains Mono', monospace;
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
   height: 100%;
-  /* Dark mode colors and gradient */
-  background: #121212; /* Fallback for browsers that don't support gradients */
-  background: linear-gradient(
-    135deg,
-    #121212 25%,
-    #1a1a1a 25%,
-    #1a1a1a 50%,
-    #121212 50%,
-    #121212 75%,
-    #1a1a1a 75%,
-    #1a1a1a
-  );
-  background-size: 40px 40px;
-
-  /* Animation */
-  animation: move 4s linear infinite;
+  --color: #E1E1E1;
+  background-color: #F3F3F3;
+  background-image: linear-gradient(0deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent),
+      linear-gradient(90deg, transparent 24%, var(--color) 25%, var(--color) 26%, transparent 27%,transparent 74%, var(--color) 75%, var(--color) 76%, transparent 77%,transparent);
+  background-size: 55px 55px;
 }
 
 body, html {
@@ -124,15 +111,18 @@ body, html {
 .button-cmt {
   background-color: #3a3b3c;
   border: #5c5e60 1px solid;
+  border-radius: 3px;
   box-sizing: border-box;
   color: #fff;
   cursor: pointer;
+  display: inline-flex;
   align-items: center;
   font-size: 15px;
   font-weight: bold;
   height: 40px;
   line-height: 20px;
   list-style: none;
+  margin-top: 10px;
   outline: none;
   padding: 10px 20px;
   position: relative;
@@ -207,11 +197,32 @@ body:has(.modal){
 }
 
 .modal{
+  border-radius: 10px;
+  background: rgba(51, 49, 49, 0.14);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8.8px);
+  -webkit-backdrop-filter: blur(8.8px);
+  border: 1px solid rgba(51, 49, 49, 0.45);
+  width: 100%;
+  display: flex;
+  padding: 20px;
+  text-align: left;
+  width: 100%;
+  display: inline-block;
+  z-index: 50;
+}
+
+.cmt{
   border-radius: 5px;
-  background: rgba(0, 0, 0, 0.462);
-  backdrop-filter: blur(7px);
-  -webkit-backdrop-filter: blur(10px);
-  border:1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(51, 49, 49, 0.14);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(8.8px);
+  -webkit-backdrop-filter: blur(8.8px);
+  border: 1px solid rgba(51, 49, 49, 0.45);
+  width: 100%;
+  display: flex;
   padding: 20px;
   text-align: left;
   width: 100%;
@@ -227,3 +238,53 @@ body:has(.modal){
   border:1px solid rgba(255, 255, 255, 0.18);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
+
+/* From Uiverse.io by G4b413l */ 
+.line-wobble {
+  --uib-size: 80px;
+  --uib-speed: 1.55s;
+  --uib-color: black;
+  --uib-line-weight: 5px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--uib-line-weight);
+  width: var(--uib-size);
+  border-radius: calc(var(--uib-line-weight) / 2);
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
+ }
+ 
+ .line-wobble::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: var(--uib-color);
+  opacity: 0.1;
+ }
+ 
+ .line-wobble::after {
+  content: '';
+  height: 100%;
+  width: 100%;
+  border-radius: calc(var(--uib-line-weight) / 2);
+  animation: wobble var(--uib-speed) ease-in-out infinite;
+  transform: translateX(-90%);
+  background-color: var(--uib-color);
+ }
+ 
+ @keyframes wobble {
+  0%,
+   100% {
+   transform: translateX(-90%);
+  }
+ 
+  50% {
+   transform: translateX(90%);
+  }
+ }
+ 

@@ -6,7 +6,7 @@ a {
     position: fixed;
     top: 0;
     left: 0;
-    background: linear-gradient(90deg, rgba(103, 97, 114, 0.9), rgba(61, 56, 75, 0.341));
+    background-color: rgba(23, 23, 23, 0.281);
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(10px);
     display: flex;
@@ -25,7 +25,7 @@ a {
 
 .navbar a {
     position: relative;
-    color: #808080;
+    color: #020302;
     margin-left: 1rem;
     margin-right: 1rem;
     transition: color 0.3s;
@@ -39,7 +39,7 @@ a {
     left: 0;
     width: 0;
     height: 3px;
-    background: #006239;
+    background: #d77d0d;
     transition: width 0.3s ease;
 }
 
@@ -53,5 +53,5 @@ a {
 
 .navbar a:hover,
 .navbar a.active-nav {
-    color: #3ecf8e;
+    color: #FF8C00;
 }
