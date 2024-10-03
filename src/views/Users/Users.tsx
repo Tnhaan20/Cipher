@@ -414,12 +414,10 @@ export default function User() {
 
       {error && <p className="text-red-500 text-center my-4">{error}</p>}
 
-      <div className="w-full grid grid-cols-2 gap-3">
-        {loading ? (
-          <p className="col-span-full text-center">Loading users...</p>
-        ) : users.length > 0 ? (
+      <div className="w-full grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-3 pb-4 px-4">
+        {users.length > 0 ? (
           users.map((user) => (
-            <div key={user.id} className="">
+            <div key={user.id} className="w-full">
               <UserCard
                 id={user.id}
                 name={user.name}

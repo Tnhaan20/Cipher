@@ -25,6 +25,8 @@ export default function UserTask() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [popupMessage, setPopupMessage] = useState({ content: "", isShow: false });
   const [searchInput, setSearchInput] = useState<string>("");
+  const [showCompleted, setShowCompleted] = useState(false)
+
   const [error, setError] = useState<string | null>(null);
 
   const loadTasks = async () => {
@@ -115,16 +117,25 @@ export default function UserTask() {
     }
   }
 
-  const filterCompleted = () => {
-    if (!completed) {
-      const completeTasks = allTask.filter(task => task.completed);
-      setTasks(completeTasks);
+  const filterTasks = () => {
+    if (showCompleted) {
+      setTasks(allTask.filter(task => task.completed));
     } else {
-      setTasks(allTask); // Reset to show all tasks
+      setTasks(allTask);
     }
-    setCompleted(!completed); // Toggle the state
   };
-  
+
+  const handleStatusChange = (taskId: number, completed: boolean) => {
+    setAllTask(prevTasks => 
+      prevTasks.map(task => 
+        task.id === taskId ? { ...task, completed } : task
+      )
+    );
+  };
+
+  useEffect(() => {
+    filterTasks();
+  }, [showCompleted, allTask]);
 
   const createTaskForm = () => {
     return (
@@ -162,14 +173,11 @@ export default function UserTask() {
             >
               Submit
             </button>
-            
           </div>
         </div>
       </div>
     )
   }
-
-
 
   useEffect(() => {
     loadTasks();
@@ -188,42 +196,48 @@ export default function UserTask() {
       content={popupMessage.content}
       isShow={popupMessage.isShow}
       />
-
-      
-      <div className="grid grid-cols-2 p-5">
-        <div className="flex justify-start mr-72">
-          <Button
-            name="Create task"
-            type="create"
-            modalTitle="Create task"
-            modalContent={createTaskForm()}
-            isOpen={isModalOpen}
-            setIsOpen={setIsModalOpen}
-            style="max-w-2xl"
-          />
-        </div>
-        <div className="flex justify-end">
+      <div className="w-full grid grid-cols-2 px-10 py-3 items-start">
+      <div className="justify-self-start col-span-1">
+        <Button
+          name="Create task"
+          type="create"
+          modalTitle="Create task"
+          modalContent={createTaskForm()}
+          isOpen={isModalOpen}
+          setIsOpen={setIsModalOpen}
+          style="max-w-2xl"
+        />
+      </div>
+      <div className="justify-self-end flex flex-col items-end">
+        <input
+          type="text"
+          className="search-input p-2 h-11 w-96"
+          placeholder="Search task"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+        />
+        <div className='flex items-center mt-2'>
           <input
-            type="text"
-            className="search-input p-2 h-11 mt-2 mr-2 w-96"
-            placeholder="Search task"
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
+            type="checkbox"
+            title='Show Completed'
+            className="h-5 w-5 rounded"
+            checked={showCompleted}
+            onChange={() => setShowCompleted(!showCompleted)}
           />
-          <button onClick={filterCompleted}>
-            Which is complete
-          </button>
+          <span className='ml-2'>Completed</span>
         </div>
       </div>
-        <div className="w-full items-center md:w-1/2 mb-10 z-1">
+    </div>
+        <div className="w-full items-center gap-3 px-10 mb-10 z-1">
           {tasks.map((task) => (
               <TaskCard
-                key={task.id}
-                userId={task.userId}
-                id={task.id}
-                title={task.title}
-                completed={task.completed}
-              />
+              key={task.id}
+              userId={task.userId}
+              id={task.id}
+              title={task.title}
+              completed={task.completed}
+              onStatusChange={handleStatusChange}
+            />
             ))}
           </div>
         {loading && <p>Loading tasks...</p>}

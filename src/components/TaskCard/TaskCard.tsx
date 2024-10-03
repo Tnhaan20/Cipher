@@ -7,6 +7,7 @@ interface TaskCard {
   id: number;
   title: string;
   completed: boolean;
+  onStatusChange: (id: number, completed: boolean) => void;
 }
 
 export default function TaskCard({ userId, id, title: initTitle, completed }: TaskCard) {
@@ -94,13 +95,13 @@ export default function TaskCard({ userId, id, title: initTitle, completed }: Ta
         <div className="flex items-center space-x-2">
           <input
             type="checkbox"
-            title='aaa'
+            title='Complete'
             checked={isCompleted}
             onChange={handleToggleCompleted}
-            className="form-checkbox h-5 w-5"
+            className="h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500"
             onClick={(e) => e.stopPropagation()}
           />
-          <span className={`text-sm font-medium ${isCompleted ? 'line-through ' : ''}`}>
+          <span className={`text-sm font-medium ${isCompleted ? 'line-through text-gray-500' : ''}`}>
             {currentTitle}
           </span>
         </div>
@@ -115,7 +116,7 @@ export default function TaskCard({ userId, id, title: initTitle, completed }: Ta
                 title='aaa'
                 checked={isCompleted}
                 onChange={handleToggleCompleted}
-                className="form-checkbox h-5 w-5 text-blue-600 mr-3"
+                className="form-checkbox h-5 w-5  mr-3"
               />
               <input
                 ref={titleInputRef}

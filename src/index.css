@@ -20,6 +20,7 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100%;
+  width: 100%;
 }
 
 .app-container {
@@ -103,8 +104,8 @@ body, html {
   touch-action: manipulation;
 }
 .button-search:hover {
-  background-color: #287050;
-  border: #3ecf8e 1px solid;
+  background-color: #16a34a;
+  border: #267d56 1px solid;
 }
 
 
@@ -249,6 +250,7 @@ body:has(.modal){
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 47%;
   height: var(--uib-line-weight);
   width: var(--uib-size);
   border-radius: calc(var(--uib-line-weight) / 2);

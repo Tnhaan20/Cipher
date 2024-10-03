@@ -5,12 +5,18 @@ import AlbumCard from "../../components/AlbumCard/AlbumCard";
 import FuncButton from "../../components/Button/Button";
 import Popup from "../../components/PopUp/Popup";
 
+interface UserAlbum {
+  userId: number;
+  id: number;
+  title: string;
+}
+
+interface User {
+  userId: number;
+  name: string;
+}
+
 export default function UserAlbum() {
-  interface UserAlbum {
-    userId: number;
-    id: number;
-    title: string;
-  }
 
   const { id } = useParams<{ id: string }>();
   const [albums, setAlbums] = useState<UserAlbum[]>([]);
@@ -23,6 +29,7 @@ export default function UserAlbum() {
   const [formErrors, setFormErrors] = useState({ title: "" });
   const [isFormValid, setIsFormValid] = useState(false);
   const [touched, setTouched] = useState({ title: false });
+  const [users, setUsers] = useState<{ [key: number]: User }>({});
 
   useEffect(() => {
     loadUserAlbums();
@@ -32,7 +39,10 @@ export default function UserAlbum() {
     searchAlbum();
   }, [searchInput]);
 
-
+  useEffect(() => {
+    loadUserID()
+  })
+  
   const loadUserAlbums = async () => {
     try {
       setLoading(true);
@@ -51,6 +61,16 @@ export default function UserAlbum() {
       console.error("Error fetching albums:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadUserID = async () => {
+    try {
+      const res = await axios.get(`https://jsonplaceholder.typicode.com/users`);
+      const userList = res.data.map((user: any) => ({ userId: user.id, name: user.name }));
+      setUsers(userList.reduce((map: any, user: any) => ({ ...map, [user.userId]: user }), {}));
+    } catch (error) {
+      console.log('Error loading users', error);
     }
   };
 
@@ -215,6 +235,7 @@ export default function UserAlbum() {
               userId={album.userId}
               id={album.id}
               title={album.title}
+              userName={users[album.userId]?.name || "Loading..."}
             />
           ))}
         </div>

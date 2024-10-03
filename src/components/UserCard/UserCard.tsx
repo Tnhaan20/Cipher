@@ -10,7 +10,7 @@ interface UserCard{
 
 export default function UserCard({id, name, email, phone}: UserCard) {
     return (
-      <div className="w-full h-full">
+      <div className="w-full flex items-center justify-center">
       <div className="user-card h-full flex flex-col">
         <div className="flex-grow">
           <p>User's ID: {id}</p>

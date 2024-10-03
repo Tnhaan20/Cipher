@@ -185,11 +185,24 @@ export default function Album() {
       </div>
     )
   }
+
+  const loadUser = async (userId: number) => {
+    if(!users[userId]) {
+      try {
+        const response = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}`)
+        setUsers((prev) => ({...prev, [userId]: {userId: response.data.id, name: response.data.name}}))
+      } catch (error) {
+        console.log('E' + error);
+      }
+    }
+  }
   
   
   useEffect(() => {
     searchAlbum();
   }, [searchInput]);
+  
+  if (loading) return <div className="line-wobble mt-10"></div>;
 
   return (
     <div className="w-full">
@@ -249,17 +262,18 @@ export default function Album() {
         </div>
 
         <div className="w-full grid grid-cols-2 gap-3 pb-4 pt-80 px-4">
-      {loading ? (
-        <div className="w-full line-wobble mt-10"></div>
-        ) : albums.length > 0 ? (
-          albums.map((album) => (
+      {albums.length > 0 ? (
+        albums.map((album) => {
+            loadUser(album.userId);
+            return(
             <AlbumCard
               key={album.id}
               userId={album.userId}
               id={album.id}
               title={album.title}
+              userName={users[album.userId]?.name || "Loading..."}
             />
-          ))
+          )})
         ) : (
           <p className="col-span-full text-center">No albums found.</p>
         )}

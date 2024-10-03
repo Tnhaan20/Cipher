@@ -6,8 +6,6 @@ interface PostCardProps {
   id: number;
   title: string;
   body: string;
-  onViewComments: (postId: number) => void;
-  showComments: boolean;
   name: string;
 }
 

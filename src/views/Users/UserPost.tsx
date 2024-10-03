@@ -338,7 +338,7 @@ export default function UserPost() {
       isShow={popupMessage.isShow}
       />
       <div className="grid grid-cols-2 p-5">
-        <div className="grid-cols-1 mr-36">
+        <div className="col-span-1">
         <FuncButton
             name="Create post"
             type="create"
@@ -358,7 +358,6 @@ export default function UserPost() {
             onChange={(e) => setSearchInput(e.target.value)}
             />
         </div>
-          
       </div>
 
       {loading ? (
@@ -376,32 +375,9 @@ export default function UserPost() {
                   id={post.id}
                   title={post.title}
                   body={post.body}
-                  onViewComments={loadComment}
-                  showComments={visibleComments[post.id] || false}
                   name={users[post.userId]?.userName || "Loading..."}
                 />
-                {visibleComments[post.id] && comments[post.id] && (
-                  <div className="mt-4 ml-4">
-                    <button
-                      className="w-full button-cmt rounded-3xl mb-4"
-                      onClick={() => setActiveCommentPostId(activeCommentPostId === post.id ? null : post.id)}
-                    >
-                      {activeCommentPostId === post.id ? "Cancel" : "Make a comment"}
-                    </button>
-                    {activeCommentPostId === post.id && commentForm(post.id)}
-                    <h3 className="text-lg font-semibold">
-                      Comments of post {post.id}:
-                    </h3>
-                    {comments[post.id].map((comment) => (
-                      <div key={comment.id} className="mt-2 p-2">
-                        <p className="text-xl">
-                          <strong>{comment.name}</strong> ({comment.email})
-                        </p>
-                        <p>{comment.body}</p>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                
               </div>
             );
           })}

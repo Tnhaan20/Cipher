@@ -26,9 +26,7 @@ export default function Posts() {
 
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [allPosts, setAllPosts] = useState<Post[] | null>(null);
-  const [comments, setComments] = useState<{ [key: number]: Comment[] }>({});
   const [users, setUsers] = useState<{ [key: number]: User }>({});
-  const [visibleComments, setVisibleComments] = useState<{ [key: number]: boolean; }>({});
   const [searchInput, setSearchInput] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,11 +35,6 @@ export default function Posts() {
   const [isFormValid, setIsFormValid] = useState(false);
   const [touched, setTouched] = useState({ title: false, body: false, userId: false });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [newComment, setNewComment] = useState({ name: "", email: "", body: "" });
-  const [commentFormErrors, setCommentFormErrors] = useState({ name: "", email: "", body: "" });
-  const [isCommentFormValid, setIsCommentFormValid] = useState(false);
-  const [commentFormTouched, setCommentFormTouched] = useState({ name: false, email: false, body: false });
-  const [activeCommentPostId, setActiveCommentPostId] = useState<number | null>(null);
   const [popupMessage, setPopupMessage] = useState({ content: "", isShow: false });
 
   useEffect(() => {
@@ -99,22 +92,6 @@ export default function Posts() {
       }
     }
   }
-
-  const loadComment = async (postId: number) => {
-    if (!comments[postId]) {
-      try {
-        const response = await axios.get(`https://jsonplaceholder.typicode.com/comments?postId=${postId}`);
-        setComments((prev) => ({ ...prev, [postId]: response.data }));
-      } catch (error) {
-        console.log("Error", error);
-        return;
-      }
-    }
-    setVisibleComments((prev) => ({
-      ...prev,
-      [postId]: !prev[postId],
-    }));
-  };
 
   const searchPosts = () => {
     if (!searchInput.trim()) {
@@ -264,6 +241,7 @@ export default function Posts() {
     );
   };
   
+  if (loading) return <div className="line-wobble mt-10"></div>;
 
   return (
     <>
@@ -319,9 +297,7 @@ export default function Posts() {
             <p className="text-2xl mt-4">- allows users to preview key content and interact with options like viewing details, sharing, or performing actions -</p>
           </div>
         </div>
-      {loading ? (
-        <p className="text-center my-4">Loading posts...</p>
-      ) : error ? (
+      {error ? (
         <p className="text-red-500 text-center my-4">{error}</p>
       ) : posts && posts.length > 0 ? (
           <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 pb-4 pt-56 px-4">
@@ -334,8 +310,6 @@ export default function Posts() {
                   id={post.id}
                   title={post.title}
                   body={post.body}
-                  onViewComments={loadComment}
-                  showComments={visibleComments[post.id] || false}
                   name={users[post.userId]?.name || "Loading..."}
                 />
               </div>

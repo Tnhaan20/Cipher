@@ -8,10 +8,11 @@ interface AlbumProps {
   userId: number;
   id: number;
   title: string; 
+  userName: string;
 }
 
 
-export default function AlbumCard({ userId, id, title: initTitle }: AlbumProps) {
+export default function AlbumCard({ userId, id, title: initTitle, userName }: AlbumProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [currentTitle, setCurrentTitle] = useState(initTitle);
@@ -157,6 +158,7 @@ export default function AlbumCard({ userId, id, title: initTitle }: AlbumProps) 
         <div className="flex items-center">
           <div className="flex-grow p-2">
             <p className="mb-2 font-semibold">{currentTitle}</p>
+            <p>Author: {userName}</p>
           </div>
         </div>
         <div className="fixed top-5 right-5">
