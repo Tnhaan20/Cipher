@@ -197,6 +197,7 @@ body:has(.modal){
   overflow: hidden;
 }
 
+
 .modal{
   border-radius: 10px;
   background: rgba(51, 49, 49, 0.14);

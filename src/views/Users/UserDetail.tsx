@@ -450,11 +450,7 @@ export default function UserDetail() {
                 </svg>
               </button>
             </div>
-            <div className="flex space-x-8 mb-4">
-              <span><strong>10</strong> posts</span>
-              <span><strong>256</strong> followers</span>
-              <span><strong>284</strong> following</span>
-            </div>
+            
             <div className="text-sm">
               <p className="text-gray-600">{user.email}</p>
               <p className="text-gray-600">{user.phone}</p>

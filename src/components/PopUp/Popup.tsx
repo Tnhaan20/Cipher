@@ -8,7 +8,7 @@ export default function Popup({ content, isShow }: PopupMessage) {
   if (!isShow) return null;
  
   return (
-    <div className="fixed bottom-4 left-4 z-50 bg shadow-md rounded-lg p-4 max-w-sm">
+    <div className="fixed bottom-4 left-4 z-[100] bg-white shadow-md rounded-lg p-4 max-w-sm">
       <p>
         {content}
       </p>

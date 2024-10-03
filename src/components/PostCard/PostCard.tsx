@@ -28,8 +28,8 @@ export default function PostCard({ id, title, body, name }: PostCardProps) {
               <p className="overflow-hidden text-ellipsis line-clamp-3">
                 {body}
               </p>
-              <div className="pt-10 w-full flex justify-between">
-                <span className="flex items-center">
+              <div className="pt-16 w-full flex justify-between">
+                <span className="w-full flex justify-start items-center">
                   Read more
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
