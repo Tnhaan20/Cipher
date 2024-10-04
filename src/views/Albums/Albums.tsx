@@ -248,7 +248,7 @@ export default function Album() {
     </div>
     <div className="">
           <img 
-            className="w-full h-[28.5rem] object-cover absolute top-14 left-0" 
+            className="w-full fade h-[28.5rem] object-cover absolute top-14 left-0" 
             src={bg} 
             alt="Blurred social media banner" 
           />

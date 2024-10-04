@@ -288,7 +288,7 @@ export default function Posts() {
     <div className="w-full">
         <div className="">
           <img 
-            className="w-full h-96 object-cover absolute top-14 left-0" 
+            className="w-full fade h-96 object-cover absolute top-14 left-0" 
             src={bg} 
             alt="Blurred social media banner" 
           />

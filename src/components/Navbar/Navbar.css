@@ -6,7 +6,7 @@ a {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: rgba(23, 23, 23, 0.281);
+    background-color: #d3baba;
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(10px);
     display: flex;
@@ -25,7 +25,7 @@ a {
 
 .navbar a {
     position: relative;
-    color: #020302;
+    color: #464946;
     margin-left: 1rem;
     margin-right: 1rem;
     transition: color 0.3s;
@@ -39,7 +39,7 @@ a {
     left: 0;
     width: 0;
     height: 3px;
-    background: #d77d0d;
+    background: #AD8E70;
     transition: width 0.3s ease;
 }
 
@@ -53,5 +53,5 @@ a {
 
 .navbar a:hover,
 .navbar a.active-nav {
-    color: #FF8C00;
+    color: #AD8E70;
 }

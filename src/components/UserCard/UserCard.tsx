@@ -9,24 +9,22 @@ interface UserCard{
 }
 
 export default function UserCard({id, name, email, phone}: UserCard) {
-    return (
-      <div className="w-full flex items-center justify-center">
-      <div className="user-card h-full flex flex-col">
-        <div className="flex-grow">
-          <p>User's ID: {id}</p>
-          <p>Name: {name}</p>
-          <p className="mt-5">Email: {email}</p>
-          <p>Phone: {phone}</p>
-        </div>
-        <div className="w-full flex justify-end mt-auto">
-          <Link
-            to={`/users/${id}/detail`}
-            className="button-search"
-          >
-            View user detail
-          </Link>
-          </div>
-        </div>
+  return (
+    <div className="user-card w-full h-full flex flex-col border rounded-lg shadow-sm">
+      <div className="flex-grow">
+        <p className="font-semibold">User's ID: {id}</p>
+        <p className="text-lg font-bold mt-2">{name}</p>
+        <p className="mt-4">Email: {email}</p>
+        <p>Phone: {phone}</p>
       </div>
-    )
+      <div className="mt-4">
+        <Link
+          to={`/users/${id}/detail`}
+          className="button-search inline-block"
+        >
+          View user detail
+        </Link>
+      </div>
+    </div>
+  )
 }

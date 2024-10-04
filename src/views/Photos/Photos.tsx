@@ -367,6 +367,7 @@ export default function AlbumPhotos() {
           {photos.map((photo, index) => (
             <div key={photo.id} className="photo-card relative">
               <img
+                loading="lazy"
                 src={photo.thumbnailUrl}
                 alt={photo.title}
                 className="w-full h-40 object-cover mb-2 rounded cursor-pointer"
@@ -410,6 +411,7 @@ export default function AlbumPhotos() {
                 </svg>
               </button>
               <img
+                loading="lazy"
                 src={photos[currentImg].url}
                 alt={photos[currentImg].title}
                 className="max-w-full max-h-full object-contain"

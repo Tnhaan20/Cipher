@@ -7,7 +7,7 @@ export default function Navbar() {
             <header className='header w-full px-10'>
                 <div className='w-full grid grid-cols-3'>
                     <div className="flex items-center justify-between col-span-1 mr-35">
-                        <NavLink to="/" className='font-bold text-[#2c9063] text-3xl'>Training</NavLink>
+                        <NavLink to="/" className='font-bold text-[#AD8E70] text-3xl'>Training</NavLink>
                     </div>
                     <div className="w-full flex items-center justify-center col-span-1">
                         <nav className='navbar'>
@@ -33,12 +33,6 @@ export default function Navbar() {
                                 <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.022 20.354c.284-1.394.974-2.138 2.076-3.038a6.17 6.17 0 0 1 7.805 0c1.101.9 1.882 1.644 2.165 3.038M12 13.028a3.31 3.31 0 1 0 0-6.619a3.31 3.31 0 0 0 0 6.619"/><rect width="18.5" height="18.5" x="2.75" y="2.75" rx="6"/></g></svg>
                             </NavLink>
                         </nav>
-                    </div>
-                    <div className="flex items-center justify-end col-span-1">
-                        <button title='Website for learning React' className='active-nav'>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="3em" viewBox="0 0 24 24"><path fill="currentColor" d="M11 18h2v-2h-2zm1-12a4 4 0 0 0-4 4h2a2 2 0 0 1 2-2a2 2 0 0 1 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5a4 4 0 0 0-4-4M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2"></path></svg>
-                        
-                        </button>
                     </div>
                 </div>
             </header>
