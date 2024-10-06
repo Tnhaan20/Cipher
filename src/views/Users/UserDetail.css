@@ -9,7 +9,7 @@
 .user-nav a {
   position: relative;
   font-size: 20px;
-  color: #808080;
+  color: #2a2a2a;
   font-weight: 500;
   margin-left: 20px;
   transition: color 0.3s;
@@ -23,7 +23,7 @@
   left: 0;
   width: 0;
   height: 2px;
-  background: #006239;
+  background: #AD8E70;
   transition: width 0.3s ease;
 }
 
@@ -39,7 +39,7 @@
 .user-nav a:hover,
 .user-nav a:focus,
 .user-nav a.active-nav {
-  color: #3ecf8e;
+  color: #AD8E70;
 }
 
 

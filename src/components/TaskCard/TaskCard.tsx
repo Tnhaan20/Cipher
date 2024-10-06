@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Popup from '../PopUp/Popup';
+import './TaskCard.css'
 
 interface TaskCard {
   userId: number;
@@ -89,7 +90,7 @@ export default function TaskCard({ userId, id, title: initTitle, completed }: Ta
     <>
       <Popup content={popupMessage.content} isShow={popupMessage.isShow} />
       <div 
-        className="w-full bg p-3 mb-2 cursor-pointer"
+        className="w-full task-card mb-2 cursor-pointer"
         onClick={() => setIsModalOpen(true)}
       >
         <div className="flex items-center space-x-2">
@@ -116,7 +117,7 @@ export default function TaskCard({ userId, id, title: initTitle, completed }: Ta
                 title='aaa'
                 checked={isCompleted}
                 onChange={handleToggleCompleted}
-                className="form-checkbox h-5 w-5  mr-3"
+                className="form-checkbox  h-5 w-5  mr-3"
               />
               <input
                 ref={titleInputRef}
@@ -125,13 +126,13 @@ export default function TaskCard({ userId, id, title: initTitle, completed }: Ta
                 value={editedTitle}
                 onChange={(e) => setEditedTitle(e.target.value)}
                 onBlur={handleEdit}
-                className="w-full bg-transparent text-lg font-semibold focus:outline-none"
+                className="w-full bg-transparent text-white text-lg font-semibold focus:outline-none"
               />
             </div>
             <div className="flex justify-end items-center mt-4">
               <button
                 onClick={handleDelete}
-                className="bg-red-500 hover:bg-red-600 text-white mt-3 px-4 py-2 mr-2 rounded-sm"
+                className="button-search hover:bg-red-600 text-white mt-3 px-4 py-2 mr-2 rounded-sm"
               >
                 Delete task
               </button>
